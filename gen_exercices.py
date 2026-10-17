@@ -307,7 +307,7 @@ def _poly_diff_carrés_composée():
 
 
 # --- Équations / inéquations
-@reg("MATH", "Équations et inéquations dans ℝ", 1)
+@reg("MATH", "Équations, inéquations et systèmes", 1)
 def _eq_premier_degre():
     a, b, c = random.randint(2, 9), random.randint(-9, 9), 0
     x = random.randint(-8, 8)
@@ -318,7 +318,7 @@ def _eq_premier_degre():
             "Isoler ax puis diviser par a.")
 
 
-@reg("MATH", "Équations et inéquations dans ℝ", 2)
+@reg("MATH", "Équations, inéquations et systèmes", 2)
 def _eq_inequation():
     a = random.choice((2, 3, 4, 5, -3, -4, -6))
     b = random.randint(-9, 9)
@@ -338,7 +338,7 @@ def _eq_inequation():
             "Diviser par un négatif → retourner le symbole.")
 
 
-@reg("MATH", "Équations et inéquations dans ℝ", (2, 3))
+@reg("MATH", "Équations, inéquations et systèmes", (2, 3))
 def _eq_systeme():
     x0, y0 = random.randint(-5, 6), random.randint(-5, 6)
     a1, b1 = random.randint(1, 3), random.randint(-3, 3)
@@ -355,7 +355,7 @@ def _eq_systeme():
             "Combinaison linéaire pour une inconnue, substitution pour l'autre.")
 
 
-@reg("MATH", "Équations et inéquations dans ℝ", 3)
+@reg("MATH", "Équations, inéquations et systèmes", 3)
 def _eq_probleme():
     px = random.randint(5, 15)
     py = random.randint(2, 9)
@@ -372,7 +372,7 @@ def _eq_probleme():
             "Poser les inconnues, traduire CHAQUE phrase, puis combinaison.")
 
 
-@reg("MATH", "Équations et inéquations dans ℝ", 3)
+@reg("MATH", "Équations, inéquations et systèmes", 3)
 def _eq_tableau_signes():
     r1, r2 = random.randint(-6, -1), random.randint(1, 7)
     S, P = r1 + r2, r1 * r2
@@ -386,7 +386,7 @@ def _eq_tableau_signes():
 
 
 # --- Vecteurs
-@reg("MATH", "Configurations du plan et vecteurs", 1)
+@reg("MATH", "Calcul vectoriel dans le plan", 1)
 def _vec_ab():
     (vx, vy, n) = random.choice(TRIPLES2)
     ax, ay = random.randint(-4, 4), random.randint(-4, 4)
@@ -397,7 +397,7 @@ def _vec_ab():
             "AB = B − A ; norme = racine des carrés.")
 
 
-@reg("MATH", "Configurations du plan et vecteurs", 1)
+@reg("MATH", "Calcul vectoriel dans le plan", 1)
 def _vec_milieu():
     ax, ay, bx, by = (random.randint(-6, 6) for _ in range(4))
     if (ax + bx) % 2 or (ay + by) % 2:
@@ -408,7 +408,7 @@ def _vec_milieu():
             "Milieu = moyennes des coordonnées.")
 
 
-@reg("MATH", "Configurations du plan et vecteurs", 2)
+@reg("MATH", "Calcul vectoriel dans le plan", 2)
 def _vec_alignes():
     ax, ay = random.randint(-4, 4), random.randint(-4, 4)
     vx, vy = random.randint(-3, 3), random.randint(-3, 3)
@@ -428,7 +428,7 @@ def _vec_alignes():
             "xy′ − x′y = 0 ⟺ colinéaires (avec A commun → alignés).")
 
 
-@reg("MATH", "Configurations du plan et vecteurs", 3)
+@reg("MATH", "Calcul vectoriel dans le plan", 3)
 def _vec_parallelogramme():
     ax, ay = random.randint(-4, 4), random.randint(-4, 4)
     vx, vy, wx, wy = (random.randint(-4, 4) for _ in range(4))
@@ -1252,3 +1252,87 @@ def _me_dynamometre():
 
 
 import gen_svt_fr  # noqa: E402  (enregistre les générateurs SVT et Français)
+
+
+# ---- compléments PC 2026 : gravitation universelle + synthèse chimique ----
+PLANETES = {"Terre": 9.8, "Lune": 1.6, "Mars": 3.7, "Jupiter": 24.8}
+
+
+@reg("PC", "La gravitation universelle", 1)
+def _pc_poids_planete():
+    astre, g = random.choice(list(PLANETES.items()))
+    m = random.choice((2, 5, 10, 25, 60, 80))
+    p = m * g
+    aff = f"{fmt(F(int(p * 10), 10))} N"
+    return (f"Calculer le poids d'un objet de masse m = {m} kg sur {astre} "
+            f"(g = {str(g).replace('.', ',')} N/kg).",
+            f"P = m×g = {m} × {str(g).replace('.', ',')} = {aff}\n"
+            "(sa MASSE reste " + f"{m} kg : elle ne dépend pas de l'astre)",
+            "P = m × g ; la masse ne change jamais, le poids oui.")
+
+
+@reg("PC", "La gravitation universelle", 2)
+def _pc_force_grav():
+    m1 = random.choice((2, 5, 10))
+    m2 = random.choice((10, 20, 50, 100))
+    d = random.choice((1, 2, 5))
+    num = m1 * m2 / (d * d)
+    f = num * 6.67
+    aff = f"{f:.2f}".rstrip("0").rstrip(".").replace(".", ",") + " × 10⁻¹⁰ N"
+    return (f"Deux sphères de masses m₁ = {m1} kg et m₂ = {m2} kg ont leurs centres "
+            f"distants de d = {d} m. Calculer la force d'attraction "
+            "(G = 6,67 × 10⁻¹¹ SI).",
+            f"F = G × (m₁×m₂)/d² = 6,67×10⁻¹¹ × ({m1}×{m2})/{d}²\n"
+            f"= 6,67×10⁻¹¹ × {fmt(F(int(num*100), 100))} ≈ {aff}\n"
+            "Les deux corps s'attirent avec la MÊME valeur (actions réciproques).",
+            "Masses au numérateur, distance AU CARRÉ au dénominateur.")
+
+
+@reg("PC", "La gravitation universelle", 3)
+def _pc_orbite():
+    return ("① Expliquer pourquoi un satellite « flotte » autour de la Terre. "
+            "② Si on double la distance entre deux astres, que devient la force "
+            "d'attraction ? ③ Un astronaute de 70 kg : sa masse et son poids varient-ils "
+            "sur la Lune ?",
+            "① Il est en CHUTE LIBRE permanente : la gravitation l'attire, mais sa "
+            "vitesse le fait « tomber à côté » de la Terre → orbite (la gravité existe "
+            "encore en orbite !).\n"
+            "② F est divisée par 4 : d passe au carré (2d)² = 4d² au dénominateur.\n"
+            "③ Masse : inchangée (70 kg) ; poids : divisé par 6 (g_Lune ≈ 1,6 N/kg) "
+            "≈ 117 N au lieu de 686 N.",
+            "Orbite = chute perpétuelle ; F ∝ 1/d² ; masse invariante.")
+
+
+@reg("PC", "La synthèse des espèces chimiques", 1)
+def _pc_rendement_basique():
+    m_obt = random.choice((6, 8, 9, 12, 15))
+    m_the = random.choice((m_obt * 2, m_obt + m_obt // 2, int(m_obt * 4 / 3)))
+    r = F(m_obt * 100, m_the)
+    return (f"Lors d'une synthèse, la masse théorique attendue est {m_the} g ; on "
+            f"recueille {m_obt} g de produit. Calculer le rendement.",
+            f"Rendement = masse obtenue ÷ masse théorique × 100\n"
+            f"= {m_obt} ÷ {m_the} × 100 = {fmt(r)} %",
+            "Le rendement est toujours ≤ 100 %.")
+
+
+@reg("PC", "La synthèse des espèces chimiques", (2, 3))
+def _pc_synthese_complete():
+    M = random.choice((138, 180, 60, 92))
+    n_mg = random.choice((25, 50, 75, 100))
+    n = F(n_mg, 1000)
+    m_the = n * M
+    r = random.choice((70, 75, 80, 90))
+    m_obt = m_the * r / 100
+
+    def g2(x):
+        return f"{float(x):.3f}".rstrip("0").rstrip(".").replace(".", ",")
+    return (f"On synthétise une espèce chimique (M = {M} g/mol) à partir de "
+            f"{n_mg} mg de réactif limitant. ① Calculer la quantité de matière n. "
+            f"② Masse théorique de produit ? ③ Le rendement réel est de {r} % : masse "
+            "effectivement obtenue ?",
+            f"① n = m/M = {n_mg}×10⁻³ ÷ {M} = {g2(n * 1000)}×10⁻³ mol = "
+            f"{g2(n * 1000)} mmol\n"
+            f"② m_théorique = n × M = {g2(m_the)} g\n"
+            f"③ m_obtenue = {g2(m_the)} × {r}/100 = {g2(m_obt)} g",
+            "n = m/M ; rendement = obtenu/théorique × 100.")
+

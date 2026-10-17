@@ -446,7 +446,140 @@ UPGRADES = {
     },
 }
 
+
+CH_GRAVITATION = {
+    "intro": "Tous les corps de l'Univers s'attirent : c'est la GRAVITATION UNIVERSELLE, "
+             "décrite par Newton. Le poids d'un objet en est la manifestation locale.",
+    "methodes": [
+        {"nom": "Méthode 1 — la loi de Newton",
+         "texte": "F = G × (m₁ × m₂) / d² : l'attraction est proportionnelle aux MASSes "
+                  "et inversement proportionnelle au CARRÉ de la distance entre les "
+                  "centres. G = 6,67 × 10⁻¹¹ N·m²·kg⁻² (constante universelle)."},
+        {"nom": "Méthode 2 — du poids à la gravitation",
+         "texte": "Le poids P = m×g est la force gravitationnelle exercée par la Terre : "
+                  "g = G×M_T/R_T² (M_T : masse de la Terre, R_T : rayon). Sur la Lune, "
+                  "M et R différents → g_Lune ≈ 1,6 N/kg (6 fois moins)."},
+        {"nom": "Méthode 3 — le système solaire et les orbites",
+         "texte": "La gravitation retient planètes autour du Soleil, satellites autour des "
+                  "planètes. Un satellite en orbite est en CHUTE LIBRE permanente : sa "
+                  "vitesse fait qu'il « tombe à côté » de la Terre sans jamais l'atteindre."},
+    ],
+    "exemples": [
+        {"question": "Poids d'un astronaute de 80 kg sur Terre puis sur la Lune ?",
+         "etapes": ["Terre : P = 80 × 9,8 = 784 N", "Lune : P = 80 × 1,6 = 128 N"],
+         "reponse": "784 N sur Terre, 128 N sur la Lune — sa MASSE reste 80 kg partout."},
+    ],
+    "pieges": [
+        "La masse (kg) ne change pas ; le POIDS (N) dépend de l'astre.",
+        "F est divisée par 4 quand la distance double (d² au dénominateur).",
+    ],
+    "formules": ["F = G·m₁·m₂/d²", "P = m×g", "g = G·M/R²"],
+}
+
+CH_SYNTHESE = {
+    "intro": "La SYNTHÈSE chimique permet de fabriquer au laboratoire ou en usine des "
+             "espèces chimiques naturelles (aspirine, arômes) ou artificielles "
+             "(plastiques, médicaments).",
+    "methodes": [
+        {"nom": "Méthode 1 — réaliser une synthèse",
+         "texte": "Protocole type : réactifs dans un ballon → chauffage à reflux "
+                  "(accélère la réaction sans perdre de matière) → purification "
+                  "(filtration, lavage, recristallisation) → séchage → identification "
+                  "(température de fusion, chromatographie) et pesée du produit."},
+        {"nom": "Méthode 2 — calculer un rendement",
+         "texte": "Rendement = (masse réellement obtenue ÷ masse théorique) × 100. "
+                  "La masse théorique se calcule avec les quantités de matière : "
+                  "n = m/M. Un rendement < 100 % est normal (pertes, réaction "
+                  "incomplète)."},
+        {"nom": "Méthode 3 — nature ou synthèse ?",
+         "texte": "Une espèce synthétique a les MÊMES propriétés que la naturelle (même "
+                  "molécule). L'intérêt : grande quantité, coût réduit, protection des "
+                  "ressources (ex : aspirine au lieu d'écorce de saule), et création de "
+                  "molécules inconnues dans la nature."},
+    ],
+    "exemples": [
+        {"question": "n = 0,5 mol de réactif limitant donne au maximum 0,5 mol de "
+                     "produit (M = 180 g/mol). Masse théorique et rendement si on "
+                     "obtient 72 g ?",
+         "etapes": ["m_théorique = n × M = 0,5 × 180 = 90 g",
+                    "Rendement = 72/90 × 100 = 80 %"],
+         "reponse": "90 g théoriques ; rendement 80 %."},
+    ],
+    "pieges": [
+        "Le rendement n'est jamais supérieur à 100 %.",
+        "Chauffage à REFLUX = chauffer sans perdre les vapeurs (condensateur).",
+    ],
+    "formules": ["n = m/M", "rendement = m_obtenue/m_théorique × 100"],
+}
+
 NEW_CHAPTERS = [
+    (1, "La gravitation universelle", "Interaction gravitationnelle entre corps : formule, "
+     "poids et gravitation, système solaire.",
+     CH_GRAVITATION, [
+        (1, "Manuel", "Énoncer la loi de gravitation universelle et donner sa formule.",
+         "Deux corps s'attirent avec des forces opposées de même valeur :\n"
+         "F = G × (m₁ × m₂) / d², avec G = 6,67 × 10⁻¹¹ (SI), masses en kg, distance "
+         "d entre centres en m.\nLe poids est la force de gravitation exercée par la "
+         "Terre : P = m × g, avec g = G × M_T / R_T² ≈ 9,8 N/kg.",
+         "Gravitation = attraction mutuelle ; le poids en est un cas particulier.",
+         V({"enonce": "Que vaut le poids d'un objet de 5 kg sur la Lune "
+                       "(g_Lune ≈ 1,6 N/kg) ?",
+            "solution": "P = m × g = 5 × 1,6 = 8 N (contre 49 N sur Terre : la Lune "
+                        "attire 6 fois moins)."})),
+        (2, "Contrôle", "Deux sphères de 10 kg et 20 kg ont leurs centres distants de "
+         "2 m. Calculer la force d'attraction (G = 6,67 × 10⁻¹¹).",
+         "F = G × (m₁ × m₂) / d²\n= 6,67 × 10⁻¹¹ × (10 × 20) / 4\n"
+         "= 6,67 × 10⁻¹¹ × 50 = 3,3 × 10⁻⁹ N",
+         "Puissance de 10 : masses se multiplient, distance au CARRÉ divise.",
+         V({"enonce": "Si on double la distance d, que devient F ?",
+            "solution": "F est divisée par 4 (d² passe de 4 à 16 : ×4 au dénominateur)."})),
+        (3, "Type Examen Régional", "① Expliquer pourquoi la Lune tourne autour de la "
+         "Terre sans s'écraser dessus. ② Calculer g à l'altitude de la Station spatiale "
+         "(R_T = 6371 km, h ≈ 400 km) sachant g₀ = 9,8 N/kg. ③ Pourquoi les astronautes "
+         "flottent-ils ?",
+         "① La gravitation attire la Lune vers la Terre, mais sa vitesse la fait "
+         "« tomber à côté » : orbite = chute perpétuelle.\n"
+         "② g = g₀ × (R_T/(R_T+h))² = 9,8 × (6371/6771)² ≈ 9,8 × 0,885 ≈ 8,7 N/kg.\n"
+         "③ Ils ne flottent pas parce qu'il n'y a pas de gravité (elle vaut encore "
+         "≈ 8,7 N/kg !) : ils sont en CHUTE LIBRE permanente autour de la Terre.",
+         "Orbite = chute libre ; g diminue en 1/d², pas brutalement à 400 km."),
+     ]),
+    (1, "La synthèse des espèces chimiques", "Fabriquer une espèce chimique naturelle au "
+     "laboratoire : synthèse, rendement, intérêt industriel.",
+     CH_SYNTHESE, [
+        (1, "Manuel", "Qu'est-ce qu'une synthèse chimique et quel est son intérêt ?",
+         "Fabriquer au laboratoire ou en usine une espèce chimique qui existe dans la "
+         "nature (aspirine, arômes, colorants) ou qui est inconnue dans la nature "
+         "(plastiques, médicaments nouveaux).\nIntérêt : produire en grande quantité, "
+         "moins cher, avec pureté contrôlée, et protéger les ressources naturelles.",
+         "Nature → copier (synthèse) → améliorer.",
+         V({"enonce": "Citer 2 espèces chimiques synthétisées par l'industrie.",
+            "solution": "L'aspirine (acide acétylsalicylique), l'ammoniac (NH₃), les "
+                        "arômes artificiels, les colorants, les plastiques..."})),
+        (2, "Contrôle", "Une synthèse théorique permettrait d'obtenir 12 g de produit ; "
+         "on en recueille 9 g. Calculer le rendement.",
+         "Rendement = masse obtenue / masse théorique × 100\n"
+         "= 9/12 × 100 = 75 %",
+         "Rendement = obtenu ÷ théorique (toujours ≤ 100 %).",
+         V({"enonce": "Pourquoi le rendement est-il souvent inférieur à 100 % ?",
+            "solution": "Pertes lors des transferts (verrerie), réaction incomplète, "
+                        "produits secondaires, purification qui élimine une partie du "
+                        "produit."})),
+        (3, "Type Examen Régional", "On synthétise l'aspirine : 6,0 g d'acide "
+         "salicylique (M = 138 g/mol) réagissent en excès d'anhydride acétique. "
+         "① Calculer la quantité de matière d'acide salicylique. ② La masse "
+         "d'aspirine théorique attendue est 8,7 g ; on en obtient 6,5 g : rendement ? "
+         "③ Citer 2 précautions de sécurité au laboratoire.",
+         "① n = m/M = 6,0/138 ≈ 0,043 mol.\n"
+         "② Rendement = 6,5/8,7 × 100 ≈ 75 %.\n"
+         "③ Blouse, lunettes et gants ; travailler sous hotte (vapors toxiques) ; ne "
+         "jamais goûter les produits ; manipuler les réactifs corrosifs avec précaution.",
+         "n = m/M puis rendement = obtenu/théorique."),
+     ]),
+]
+
+# chapitres historiques du programme (inertie, actions réciproques...)
+NEW_CHAPTERS += [
     (1, "Le principe d'inertie et l'équilibre", "Forces compensées, repos, mouvement "
      "rectiligne uniforme, équilibre d'un solide soumis à 2 ou 3 forces.",
      CH_INERTIE, [
@@ -635,7 +768,9 @@ def sync(db):
 
     def add_exos(cid, exos):
         nonlocal n_ex
-        for diff, source, enonce, solution, astuce, variantes in exos:
+        for ex in exos:
+            diff, source, enonce, solution, astuce = ex[:5]
+            variantes = ex[5] if len(ex) > 5 else {}
             dupe = db.query("SELECT id FROM exercises WHERE chapter_id = ? AND enonce = ?",
                             (cid, enonce), one=True)
             if not dupe:

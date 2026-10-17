@@ -108,7 +108,7 @@ function setProgress(txt) {
 /* ================= synthèse ================= */
 function cleanForSpeech(t) {
   return t.replace(/\*\*/g, '')
-          .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{FE0F}]/gu, ' ')
+          .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{FE0F}\u{20E3}]/gu, ' ')
           .replace(/\s+/g, ' ').trim();
 }
 
@@ -186,16 +186,61 @@ function addMsg(cls) {
   box.scrollTop = box.scrollHeight;
   return d;
 }
+function cleanLatex(t) {
+  let s = t
+    .replace(/\\[\(\)]|\\\[|\\\]|\$\$?/g, '')                    // délimiteurs \[ \] \( \) $ $$
+    .replace(/\\(begin|end)\{[a-zA-Z*]+\}/g, '')                    // environnements
+    .replace(/&amp;/g, '').replace(/&/g, '')
+    .replace(/\\(?:text|mathrm|mathbf|operatorname)\{([^{}]*)\}/g, '$1')
+    .replace(/\\mathbb\{([RNZQCD])\}/g, (m, c) => ({R:'ℝ', N:'ℕ', Z:'ℤ', Q:'ℚ', C:'ℂ', D:'𝔻'}[c] || c))
+    .replace(/\\sqrt\s*\[([^\]]+)\]\s*\{([^{}]*)\}/g, '($2)^(1/$1)')
+    .replace(/\\sqrt\s*\{([^{}]*)\}/g, '√($1)')
+    .replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,
+             (m, a, b) => (/[+\-−×÷· ]/.test(a) ? '(' + a + ')' : a) + '/' +
+                          (/[+\-−×÷· ]/.test(b) ? '(' + b + ')' : b))
+    .replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,
+             (m, a, b) => (/[+\-−×÷· ]/.test(a) ? '(' + a + ')' : a) + '/' +
+                          (/[+\-−×÷· ]/.test(b) ? '(' + b + ')' : b))
+    .replace(/\^\{?\\circ\}?/g, '°')
+    .replace(/\^\{?2\}?/g, '²').replace(/\^\{?3\}?/g, '³')
+    .replace(/\^\{([a-zA-Z0-9]+)\}/g, '^$1')
+    .replace(/_\{?([0-9])\}?/g, (m, d) => '₀₁₂₃₄₅₆₇₈₉'[+d])
+    .replace(/\\(Longrightarrow|implies)/g, ' ⇒ ')
+    .replace(/\\(Leftrightarrow|iff)/g, ' ⇔ ')
+    .replace(/\\(rightarrow|to|longrightarrow)/g, ' → ')
+    .replace(/\\(leftarrow|gets|longleftarrow)/g, ' ← ')
+    .replace(/\\times/g, '×').replace(/\\cdot/g, '·')
+    .replace(/\\div/g, '÷').replace(/\\approx/g, '≈')
+    .replace(/\\(simeq|sim)/g, '≈').replace(/\\pm/g, '±')
+    .replace(/\\(neq|ne)\b/g, '≠')
+    .replace(/\\(leqslant|leq|le)\b/g, '≤').replace(/\\(geqslant|geq|ge)\b/g, '≥')
+    .replace(/\\infty/g, '∞').replace(/\\pi/g, 'π').replace(/\\Delta/g, 'Δ')
+    .replace(/\\(alpha|beta|gamma|delta|theta|lambda|omega|mu|rho)\b/g,
+             m => ({'\\alpha':'α','\\beta':'β','\\gamma':'γ','\\delta':'δ','\\theta':'θ',
+                    '\\lambda':'λ','\\omega':'ω','\\mu':'µ','\\rho':'ρ'}[m] || m))
+    .replace(/\\(sum|Sigma)/g, 'Σ').replace(/\\prod/g, '∏')
+    .replace(/\\forall/g, '∀').replace(/\\exists/g, '∃')
+    .replace(/\\notin/g, '∉').replace(/\\in\b/g, ' ∈ ')
+    .replace(/\\subseteq/g, '⊆').replace(/\\subset/g, '⊂')
+    .replace(/\\(cup)/g, '∪').replace(/\\cap/g, '∩')
+    .replace(/\\(emptyset|varnothing)/g, '∅')
+    .replace(/\\(dots|ldots|cdots)/g, '…')
+    .replace(/\\left|\\right/g, '')
+    .replace(/\\[;,:!]/g, ' ')
+    .replace(/\\quad|\\qquad/g, '  ')
+    .replace(/\\\{/g, '{').replace(/\\\}/g, '}')
+    .replace(/\\%/g, '%').replace(/\\_/g, '_').replace(/\\&/g, '&').replace(/\\#/g, '#')
+    .replace(/\\\\/g, '\n')
+    .replace(/\\[a-zA-Z]+/g, ' ')                                      // toute commande restante
+    .replace(/\\/g, '')
+    .replace(/ {2,}/g, ' ');
+  return s;
+}
+
 function mdToHtml(t) {
-  // échappe TOUT d'abord (sécurité), puis transforme le markdown de façon contrôlée
+  // échappe TOUT d'abord (sécurité), puis transforme LaTeX + markdown de façon contrôlée
   let s = t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  s = s.replace(/\\[\(\)]|\$\$?/g, '');                 // délimiteurs LaTeX
-  s = s.replace(/\\times/g, '×').replace(/\\Delta/g, 'Δ')
-       .replace(/\\leq/g, '≤').replace(/\\geq/g, '≥')
-       .replace(/\\sqrt/g, '√').replace(/\\infty/g, '∞')
-       .replace(/\\pi/g, 'π').replace(/\\neq/g, '≠')
-       .replace(/\\rightarrow/g, '→').replace(/\\Rightarrow/g, '⇒')
-       .replace(/\\in /g, ' ∈ ').replace(/\\forall/g, '∀');
+  s = cleanLatex(s);
   s = s.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
   s = s.replace(/\*([^*\n]+)\*/g, '<i>$1</i>');
   s = s.replace(/^#{1,6}\s*(.+)$/gm, '<h4>$1</h4>');
@@ -203,14 +248,9 @@ function mdToHtml(t) {
 }
 
 function mdToPlain(t) {
-  return t.replace(/\\[\(\)]|\$\$?/g, '')
-          .replace(/\*\*([^*]+)\*\*/g, '$1').replace(/^#{1,6}\s*/gm, '')
-          .replace(/\\times/g, '×').replace(/\\Delta/g, 'Δ')
-          .replace(/\\leq/g, '≤').replace(/\\geq/g, '≥')
-          .replace(/\\sqrt/g, '√').replace(/\\infty/g, '∞')
-          .replace(/\\pi/g, 'π').replace(/\\neq/g, '≠')
-          .replace(/\\rightarrow/g, '→').replace(/\\Rightarrow/g, '⇒')
-          .replace(/\\in /g, ' ∈ ').replace(/\\forall/g, '∀').trim();
+  return cleanLatex(t)
+          .replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*\n]+)\*/g, '$1')
+          .replace(/^#{1,6}\s*/gm, '').trim();
 }
 
 function renderAnswer(text) {

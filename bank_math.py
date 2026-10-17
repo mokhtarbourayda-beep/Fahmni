@@ -220,7 +220,7 @@ def polynomes():
 
 
 def equations():
-    T = "Équations et inéquations dans ℝ"
+    T = "Équations, inéquations et systèmes"
     exos = []
     for a, b, c in ((3, 5, 20), (4, -7, 9), (5, 12, -8), (7, 3, 24), (6, -9, 15), (2, 11, -5)):
         x = F(c - b, a)
@@ -261,7 +261,7 @@ def equations():
 
 
 def vecteurs():
-    T = "Configurations du plan et vecteurs"
+    T = "Calcul vectoriel dans le plan"
     exos = []
     triples = ((3, 4, 5), (6, 8, 10), (5, 12, 13), (8, 15, 17), (9, 12, 15), (7, 24, 25), (12, 16, 20))
     for (vx, vy, n), (ax, ay) in zip(triples, ((1, 2), (0, 0), (2, 3), (1, 1), (3, 4), (2, 5), (0, 1))):

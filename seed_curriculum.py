@@ -243,7 +243,7 @@ CHAPTERS = [
                     "f(−x)=−f(x) impaire (symétrie origine)."},
       ],
       "pieges": ["Confondre image (calcul direct) et antécédent (résoudre f(x)=k)."]}),
-    ("MATH", "TC", "Équations et inéquations dans ℝ", "Équations 1er degré, 2nd degré, "
+    ("MATH", "TC", "Équations, inéquations et systèmes", "Équations 1er degré, 2nd degré, "
      "signe du trinôme, équations avec valeur absolue.",
      {"intro": "Résoudre une équation = transformer par des opérations réversibles "
                "jusqu'à isoler x.",
@@ -257,7 +257,7 @@ CHAPTERS = [
                     "Toujours isoler la valeur absolue d'abord."},
       ],
       "pieges": ["Diviser par x sans discuter x=0.", "Oublier les 2 cas de |X|=k."]}),
-    ("MATH", "TC", "Configurations du plan et vecteurs", "Colinéarité, repères, coordonnées, "
+    ("MATH", "TC", "Calcul vectoriel dans le plan", "Colinéarité, repères, coordonnées, "
      "équations de droites.",
      {"intro": "Le calcul vectoriel traduit la géométrie en calcul : distances, alignement, "
                "parallélisme.",
@@ -562,25 +562,25 @@ V = lambda *xs: list(xs)  # variantes rapides
 
 EXERCISES = [
     # ---- MATH TC ----
-    ("MATH", "TC", "Équations et inéquations dans ℝ", 1, "Manuel",
+    ("MATH", "TC", "Équations, inéquations et systèmes", 1, "Manuel",
      "Résoudre dans ℝ : 3x − 5 = 7",
      "3x = 7 + 5 = 12\nx = 12/3 = 4\nS = {4}",
      "Isoler x : passer les constantes d'un côté, diviser.", V()),
-    ("MATH", "TC", "Équations et inéquations dans ℝ", 1, "Manuel",
+    ("MATH", "TC", "Équations, inéquations et systèmes", 1, "Manuel",
      "Résoudre dans ℝ : 2(x − 3) = 5x + 4",
      "2x − 6 = 5x + 4\n−6 − 4 = 5x − 2x\n−10 = 3x\nx = −10/3\nS = {−10/3}",
      "Développer d'abord, regrouper les x d'un côté.", V()),
-    ("MATH", "TC", "Équations et inéquations dans ℝ", 2, "Contrôle",
+    ("MATH", "TC", "Équations, inéquations et systèmes", 2, "Contrôle",
      "Résoudre dans ℝ : x² − 5x + 6 = 0",
      "Δ = b² − 4ac = 25 − 24 = 1 > 0\nx₁ = (5 − 1)/2 = 2 ; x₂ = (5 + 1)/2 = 3\nS = {2 ; 3}",
      "Chercher 2 nombres dont la somme = 5 et le produit = 6 (2 et 3) : factorisation directe possible.",
      V({"enonce": "Résoudre dans ℝ : 2x² + x − 3 = 0",
         "solution": "Δ = 1 + 24 = 25 ; x = (−1 ± 5)/4 → x₁ = 1 ; x₂ = −3/2\nS = {−3/2 ; 1}"})),
-    ("MATH", "TC", "Équations et inéquations dans ℝ", 2, "Manuel",
+    ("MATH", "TC", "Équations, inéquations et systèmes", 2, "Manuel",
      "Résoudre dans ℝ : |2x − 1| = 5",
      "Cas 1 : 2x − 1 = 5 → x = 3\nCas 2 : 2x − 1 = −5 → x = −2\nS = {−2 ; 3}",
      "|X| = k ⟺ X = k ou X = −k (k ≥ 0).", V()),
-    ("MATH", "TC", "Équations et inéquations dans ℝ", 3, "Type Examen Régional",
+    ("MATH", "TC", "Équations, inéquations et systèmes", 3, "Type Examen Régional",
      "Résoudre dans ℝ : x² − 3x + 1 = 0, puis déterminer le signe du trinôme.",
      "Δ = 9 − 4 = 5 > 0\nx₁ = (3 − √5)/2 ≈ 0,38 ; x₂ = (3 + √5)/2 ≈ 2,62\n"
      "Signe : a = 1 > 0 → positif à l'extérieur des racines, négatif entre.\n"

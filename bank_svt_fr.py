@@ -9,219 +9,289 @@ def E(d, src, en, sol, ast=""):
 # ==================================================================== SVT ====
 SVT = {}
 
-SVT["La cellule, unité de la vie"] = [
-    (1, "Manuel", "Citer, dans l'ordre, les étapes de la préparation d'une cellule observée au microscope.",
-     "Prélèvement de l'échantillon → montage entre lame et lamelle (goutte d'eau) → coloration "
-     "(ex : rouge neutre, lugol) → observation d'abord au petit grossissement puis au fort grossissement.",
-     "Petit objectif d'abord : centered, puis zoomer."),
-    (2, "Contrôle", "Une cellule mesure 0,02 mm. Exprimer sa taille en µm puis en nm.",
-     "0,02 mm = 20 µm = 20 000 nm\n(1 mm = 1000 µm ; 1 µm = 1000 nm)",
-     "Les conversions : ×1000 à chaque échelle plus petite."),
-    (2, "Contrôle", "Un grossissement de 400 est utilisé : une cellule mesure 32 mm sur la photo. "
-     "Taille réelle ?",
-     "32 mm ÷ 400 = 0,08 mm = 80 µm",
-     "Taille réelle = taille observée ÷ grossissement."),
-    (2, "Contrôle", "Rendre compte : pourquoi les cellules de l'épithélium intestinal ne ressemblent-elles "
-     "pas à des cellules musculaires ?",
-     "Différenciation cellulaire : toutes portent le même ADN, mais n'expriment pas les mêmes gènes.\n"
-     "Forme et organites adaptés à la fonction (absorption vs contraction).",
-     "Même patrimoine génétique, fonctions différentes : LA clé du contenu de l'organisme."),
-    (1, "Manuel", "Vrai ou faux ? ① Toutes les cellules ont une paroi. ② Le noyau contient l'ADN. "
-     "③ Les bactéries ont un noyau. ④ Les chloroplastes réalisent la photosynthèse.",
-     "① FAUX (paroi = végétaux seulement) ② VRAI ③ FAUX (procaryotes : pas de noyau) ④ VRAI",
-     "Retenir les 3 spécificités végétales et l'absence de noyau chez les bactéries."),
-    (2, "Manuel", "Associer chaque structure à sa fonction : paroi / membrane / mitochondrie / vacuole.",
-     "Paroi → protection et rigidité (végétal)\nMembrane → échanges avec le milieu (perméabilité "
-     "sélective)\nMitochondrie → respiration, énergie (ATP)\nVacuole → réserve d'eau et de substances",
-     "4 structures, 4 fonctions : tableau de révision."),
-    (3, "Type Examen Régional",
-     "Document : une photo microscopique montre des cellules anguleuses à paroi épaisse contenant de "
-     "petits organites verts. Identifier le type de cellule et justifier par 3 arguments.",
-     "Cellule VÉGÉTALE (cellule chlorophyllienne).\n① Paroi épaisse (rigidité) ② Formes anguleuses "
-     "(paroi contrainte) ③ Organites verts = chloroplastes (photosynthèse).",
-     "3 indices suffisent : paroi + forme + chloroplastes."),
-    (2, "Contrôle", "Un élève affirme : « Le microscope ×1000 montre des atomes ». Analyser l'affirmation.",
-     "FAUX : ×1000 montre des cellules et leurs organites (taille µm).\nLes atomes (10⁻¹⁰ m = 0,1 nm) "
-     "nécessitent des microscopes électroniques (millions de fois).",
-     "Ordres de grandeur : cellule 10 µm, virus 0,1 µm, molécule 1 nm, atome 0,1 nm."),
+SVT["Les techniques adaptatives à l'étude écologique sur le terrain"] = [
+    (1, "Manuel", "Qu'est-ce qu'un quadrat et à quoi sert-il ?",
+     "Cadre métallique divisé en carrés (souvent 1 m²), posé au hasard dans la station pour "
+     "dénombrer les espèces et calculer des moyennes représentatives.",
+     "Échantillon au hasard → estimation fiable de toute la station."),
+    (2, "Contrôle", "Dans 6 quadrats, on compte l'espèce A dans 3 quadrats et l'espèce B "
+     "dans 5. Calculer les fréquences des deux espèces.",
+     "Fréquence A = 3/6 × 100 = 50 %\nFréquence B = 5/6 × 100 ≈ 83 %",
+     "Fréquence = (quadrats contenant l'espèce ÷ total) × 100."),
+    (2, "Contrôle", "Un quadrat de 1 m² contient 8 coquelicots. La station mesure 250 m². "
+     "Estimer la population totale.",
+     "Densité = 8 individus/m²\nPopulation estimée = 8 × 250 = 2000 coquelicots",
+     "Densité moyenne × surface totale."),
+    (3, "Type Examen Régional", "Une espèce a une note d'abondance-dominance 5 dans une "
+     "station. ① Interpréter. ② Expliquer pourquoi les quadrats doivent être posés au "
+     "hasard. ③ Pourquoi étudier plusieurs quadrats plutôt qu'un seul ?",
+     "① Note 5 : l'espèce DOMINE la station (recouvrement > 75 % du sol).\n"
+     "② Pour éviter un choix orienté (biais) et refléter fidèlement l'ensemble de la "
+     "station.\n③ Un seul quadrat peut tomber sur une zone atypique : plusieurs quadrats "
+     "donnent une moyenne représentative.",
+     "Dominance = recouvrement maximal ; hasard = fiabilité."),
 ]
 
-SVT["Biodiversité et classification"] = [
-    (1, "Manuel", "Définir biodiversité et citer ses 3 niveaux.",
-     "Biodiversité = diversité des êtres vivants et de leurs milieux.\nNiveaux : diversité des "
-     "MILIEUX (écosystèmes), des ESPÈCES, des INDIVIDUS (génétique).",
-     "3 niveaux : milieux, espèces, individus."),
-    (1, "Contrôle", "Citer 3 facteurs abiotiques et 3 facteurs biotiques d'une forêt marocaine.",
-     "Abiotiques : température, pluviométrie, nature du sol (aussi : lumière, altitude).\n"
-     "Biotiques : prédation, compétition, action humaine (aussi : pollinisation, symbiose).",
-     "Abiotique = non vivant ; biotique = lié au vivant (dont l'humain)."),
-    (2, "Contrôle", "Le cyprès du Maroc ne pousse naturellement que dans l'Atlas. Proposer une "
-     "explication fondée sur les exigences écologiques.",
-     "Espèce ENDÉMIQUE aux exigences précises : sols calcaires, climat semi-aride d'altitude, "
-     "sensibilité au froid excessif/humidité.\nLa conjonction de ces conditions ne se trouve que "
-     "dans l'Atlas → répartition restreinte.",
-     "Espèce endémique = aire géographique limitée par ses exigences."),
-    (2, "Contrôle", "Ranger dans l'ordre hiérarchique : famille, espèce, ordre, genre, classe, "
-     "embranchement.",
-     "Embranchement > classe > ordre > famille > genre > espèce",
-     "Phrase mémo : « Embrasse Claude Ou Franchement Georges Espère »."),
-    (2, "Manuel", "Felis silvestris (chat sauvage) et Felis catus (chat domestique) : que dit le "
-     "nom scientifique ? Peuvent-ils avoir une descendance fertile ?",
-     "Même genre Felis → très proches.\nIls sont généralement considérés comme interféconds "
-     "(descendance fertile) : certains auteurs les classent en une seule espèce (Felis silvestris).",
-     "Le binôme de Linné renseigne sur la parenté."),
-    (2, "Contrôle", "Utiliser une clé : animal à plumes → ? ; à poils → ? ; à écailles sèches → ? ; "
-     "à peau nue et humide → ?",
-     "Plumes → oiseau ; poils → mammifère ; écailles sèches → reptile ; peau nue humide → amphibien.",
-     "Les clés se lisent caractère par caractère."),
-    (3, "Type Examen Régional",
-     "Comparer deux milieux (ribière vs dune) : citer 2 différences de facteurs et relier à la "
-     "biodiversité observée (grenouille vs fennec).",
-     "Ribière : eau abondante, végétation dense, températures modérées → amphibiens (peau fine, "
-     "reproduction aquatique).\nDune : aridité extrême, sol instable, écarts thermiques → fennec "
-     "(adaptations : grandes oreilles thermorégulatrices, poils sous les pattes, peu besoin d'eau).",
-     "Facteur du milieu ↔ adaptation de l'espèce : toujours relier les 2."),
-    (2, "Manuel", "Citer 3 adaptations du chameau au désert (une morphologique, une physiologique, "
-     "une comportementale).",
-     "Morphologique : longues cils/paupières, narines fermables (sable).\nPhysiologique : réserve "
-     "de graisse (bosse), résiste à la déshydratation.\nComportementale : se couche au sol le plus "
-     "frais, active la nuit.",
-     "3 TYPES d'adaptations : morpho, physio, comportement."),
+SVT["Les facteurs édaphiques et leurs relations avec les êtres vivants"] = [
+    (1, "Manuel", "Classer par taille décroissante : limon, sable, argile.",
+     "Sable (Ø > 50 µm) > limon (2-50 µm) > argile (Ø < 2 µm).",
+     "S-L-A : du plus gros au plus fin."),
+    (2, "Contrôle", "Un sol contient 45 % de sable, 35 % de limon, 20 % d'argile. "
+     "① Qualifier ce sol. ② Son comportement vis-à-vis de l'eau ?",
+     "① Sable dominant (45 %) → sol SABLEUX.\n② Très perméable : l'eau s'infiltre vite, "
+     "il sèche rapidement — peu de rétention.",
+     "Texture dominante = constituant le plus abondant."),
+    (2, "Contrôle", "Citer 2 rôles des lombrics dans le sol.",
+     "① Ils creusent des galeries : aération et infiltration de l'eau.\n"
+     "② Leurs déjections enrichissent le sol en humus (éléments minéraux disponibles).",
+     "Lombrics = ingénieurs + engrais naturels."),
+    (3, "Type Examen Régional", "Deux parcelles : P1 sableuse, P2 argileuse, arrosées "
+     "identiquement. ② Laquelle se dessèche la première ? Justifier. ② Sur laquelle "
+     "planter une plante qui craint l'excès d'eau ?",
+     "① P1 (sableuse) : grosses particules → grands pores → l'eau s'infiltre et s'écoule "
+     "vite, faible rétention.\n② P2 retient trop l'eau (fines particules) — une plante "
+     "craignant l'excès d'eau sera mieux sur P1.",
+     "Taille des particules ↔ taille des pores ↔ rétention d'eau."),
 ]
 
-SVT["L'origine de la biodiversité"] = [
-    (1, "Manuel", "Définir mutation et indiquer où/elle se produit.",
-     "Mutation = modification accidentelle de la séquence d'ADN (d'une paire de bases, d'un gène…).\n"
-     "Elle survient lors de la réplication de l'ADN (avant les divisions cellulaires) : ALÉATOIRE.",
-     "Hasard + réplication de l'ADN : la source première de la diversité."),
-    (2, "Contrôle", "Expliquer pourquoi les mutations sont qualifiées d'« aléatoires » et la "
-     "sélection de « dirigée » par le milieu.",
-     "Aléatoires : elles apparaissent sans rapport avec les besoins (le hasard, pas l'intention).\n"
-     "Dirigée : le milieu FAVORISE les variantes adaptées (plus de survie/reproduction) et élimine "
-     "les autres → orientation de l'évolution.",
-     "La mutation propose, le milieu dispose."),
-    (2, "Contrôle", "Les antibiotiques : expliquer en 4 étapes l'apparition de souches résistantes.",
-     "① Mutations aléatoires → quelques bactéries résistantes\n② Antibiotique : tue les sensibles, "
-     "épargne les résistantes (sélection)\n③ Les résistantes se multiplient sans compétition\n"
-     "④ Population devenue résistante → l'antibiotique échoue",
-     "L'antibiotique SELECTE : il ne crée pas la résistance."),
-    (2, "Manuel", "Citer 3 types de preuves de l'évolution et un exemple pour chacune.",
-     "Fossiles : séries évolutives (cheval, cétacés).\nAnatomie comparée : mêmes plans d'organisation "
-     "(membre antérieur humain/aile de chauve-souris).\nEmbryologie : embryons de vertébrés très "
-     "semblables aux premiers stades.",
-     "3 familles de preuves : fossiles, anatomie, embryons."),
-    (2, "Contrôle", "La papillon Biston betularia (Angleterre industriel) : expliquer le passage du "
-     "clair au foncé.",
-     "① Mutations aléatoires produisent des foncés (rares au départ)\n② Suie noircit les troncs → "
-     "les clairs deviennent visibles (prédation)\n③ Les foncés camouflés survivent et se reproduisent "
-     "davantage\n④ La fréquence des foncés augmente : population désormais sombre.",
-     "Exemple type : prédation = pression de sélection."),
-    (3, "Type Examen Régional",
-     "Un éleveur veut des vaches qui produisent plus de lait. Expliquer pourquoi la sélection "
-     "artificielle ressemble à la sélection naturelle.",
-     "Les 2 TRIENT des variantes héritables (créées par mutations/brassage) : l'éleveur fait se "
-     "reproduire les plus productives (comme le milieu favorise les mieux adaptées).\n"
-     "Différence : critère choisi par l'humain (lait) vs survie dans le milieu.",
-     "Sélection = tri de variantes ; qui trie ? (milieu ou humain)."),
+SVT["Les facteurs climatiques et leurs relations avec les êtres vivants"] = [
+    (1, "Manuel", "Donner l'instrument de mesure : température, précipitations, vitesse "
+     "du vent, humidité de l'air.",
+     "Thermomètre ; pluviomètre ; anémomètre ; hygromètre.",
+     "-mètre : therm-o = chaleur, pluvi = pluie, aném = vent, hygr = humidité."),
+    (2, "Contrôle", "Températures d'une journée : min 12 °C, max 29 °C. Amplitude "
+     "thermique ? Interpréter une amplitude forte.",
+     "Amplitude = 29 − 12 = 17 °C.\nUne forte amplitude = grandes différences "
+     "jour/nuit (climat continental ou d'altitude) : seules les espèces résistantes "
+     "s'y installent.",
+     "Amplitude = max − min."),
+    (2, "Contrôle", "Sur un diagramme ombrothermique, la courbe des pluies passe SOUS "
+     "celle des températures de juin à septembre. Que se passe-t-il ?",
+     "Période SÈCHE (juin-septembre) : les précipitations sont insuffisantes par rapport "
+     "à la chaleur — c'est l'été sec du climat méditerranéen.",
+     "Pluies sous température = saison sèche."),
+    (3, "Type Examen Régional", "Les arganiers poussent dans le Sud-Ouest marocain "
+     "(faibles pluies). ① Nommer ce type de plante. ② Citer 2 adaptations attendues. "
+     "③ Que devient la végétation si les pluies augmentent nettement ?",
+     "① XÉROPHYLE (adaptée à la sécheresse).\n② Feuilles petites/dures (moins "
+     "d'évaporation), racines profondes, cuticule épaisse.\n③ Des espèces plus "
+     "exigeantes en eau s'installent : la végétation s'enrichit et se densifie "
+     "(évolution vers une forêt).",
+     "Végétation ↔ climat : tout changement climatique change le paysage."),
 ]
 
-SVT["L'érosion : l'action de l'eau sur les roches"] = [
-    (1, "Manuel", "Définir érosion et citer ses 2 types avec un exemple.",
-     "Érosion = usure et enlèvement des roches par des agents (eau, gel, vent…).\n"
-     "MÉCANIQUE : fragmentation (gel qui éclate une roche).\nCHIMIQUE : dissolution (calcaire "
-     "dissous par l'eau acide).",
-     "Casser ≠ dissoudre : débris visibles vs ions invisibles."),
-    (2, "Contrôle", "Une eau contient des ions calcium (Ca²⁺) : quel type d'érosion en est responsable ? "
-     "Quelle roche ?",
-     "Érosion CHIMIQUE par dissolution — la roche calcaire (CaCO₃) est dissoute par l'eau "
-     "légèrement acide (CO₂ de l'air).",
-     "Ions dissous = érosion chimique, même si l'eau paraît claire."),
-    (2, "Contrôle", "Pourquoi les galets d'un oued sont-ils arrondis et les éboulis de montagne "
-     "anguleux ?",
-     "Galets : transport LONG dans l'eau → frottements mutuels et polissage (usure).\n"
-     "Éboulis : chute GRAVITAIRE courte sans transport → fragmentation sans usure (angles vifs).",
-     "Forme des grains = durée/distance de transport."),
-    (2, "Manuel", "Citer 3 conséquences de la déforestation sur l'érosion.",
-     "① Ruissellement violent → arrachage du sol (érosion accélérée)\n② Envasement des barrages "
-     "(sédiments transportés)\n③ Perte de la fertilité → désertification.",
-     "Le végétal protège : feuillage, litière, racines."),
-    (3, "Type Examen Régional",
-     "Un document montre des strates d'un canyon. Expliquer comment l'eau a « creusé » le canyon "
-     "en reliant érosion et transport.",
-     "① La rivière arrache des particules au fond (érosion mécanique, les cailloux servent "
-     "d'outils)\n② Elle les transporte (suspension, roulissage) en les polissant\n③ Le dépôt se fait "
-     "plus loin (deltas, plaines) → l'incision continue → canyon au fil du temps.",
-     "Érosion = arrachage + transport + dépôt : le cycle des matériaux."),
-    (2, "Contrôle", "Relier agent et trace : gel / vent / vagues / eau courante → 4 traces caractéristiques.",
-     "Gel → éboulis, roches éclatées (haute montagne)\nVent → roches polies, dunes\n"
-     "Vagues → falaises rongées, plateformes d'abrasion\nEau courante → vallées en V, galets arrondis",
-     "Chaque agent laisse sa SIGNATURE dans le paysage."),
+SVT["Flux de la matière et de l'énergie dans l'écosystème"] = [
+    (1, "Manuel", "Rédiger la chaîne trophique : chêne, sanglier, lynx — avec les rôles.",
+     "Chêne (glands) → sanglier → lynx\nProducteur → consommateur C1 (herbivore) → "
+     "consommateur C2 (carnivore).",
+     "Toujours commencer par le végétal vert."),
+    (2, "Contrôle", "Une biomasse de plantes de 2000 kg nourrit des criquets. "
+     "Calculer la biomasse maximale des criquets puis des oiseaux qui les mangent "
+     "(rendement 10 % par niveau).",
+     "Criquets : 2000 × 10 % = 200 kg\nOiseaux : 200 × 10 % = 20 kg",
+     "×0,1 à chaque maillon."),
+    (2, "Contrôle", "Quel est le rôle des décomposeurs dans le cycle de la matière ?",
+     "Ils décomposent les cadavres, déjections et débris → éléments minéraux remis au "
+     "sol → repris par les racines des producteurs : la matière CYCLE, l'énergie ne fait "
+     "que passer.",
+     "Décomposeurs = recycleurs du sol."),
+    (3, "Type Examen Régional", "Une pesticide tue les sauterelles d'une prairie. "
+     "① Schématiser la chaîne concernée et indiquer les conséquences sur chaque maillon. "
+     "② Pourquoi le poison se retrouve-t-il concentré chez les prédateurs ?",
+     "① Herbe → sauterelle → lézard → faucon : les sauterelles meurent (empoisonnées) → "
+     "les lézards et faucons manquent de proies (et s'empoisonnent en mangeant les "
+     "cadavres).\n② Bioaccumulation : en mangeant de nombreuses proies contaminées, le "
+     "prédateur concentre le poison dans ses tissus (plus on est haut, plus la "
+     "concentration est forte).",
+     "Un maillon touché = toute la chaîne perturbée."),
 ]
 
-SVT["La sédimentation et les roches sédimentaires"] = [
-    (1, "Manuel", "Définir sédimentation et diagenèse.",
-     "Sédimentation = dépôt des particules transportées quand l'agent ralentit.\n"
-     "Diagenèse = transformation du sédiment meuble en roche cohérente (compactation + cimentation).",
-     "Dépôt → compactage → collage (ciment)."),
-    (1, "Contrôle", "Associer : sable, argile, galets, coquilles → roches correspondantes.",
-     "Sable → grès ; argile → argilite/marnes ; galets → conglomérat (poudingue) ; "
-     "coquilles → calcaire organogène.",
-     "Granulométrie = taille des grains : du gros au fin."),
-    (2, "Contrôle", "Dans une falaise : couche 1 (bas) à fossiles marins, couche 2 sableuse, couche 3 "
-     "(haut) à fossiles terrestres. Reconstituer l'histoire.",
-     "Superposition : 1 la plus ancienne, 3 la plus récente.\n① Milieu marin (couche 1) → la mer "
-     "couvrait le site\n② Sédimentation littorale (sable)\n③ Retrait de la mer → milieu terrestre "
-     "(couche 3).\nHistoire : mer → littoral → terre (régression marine).",
-     "Fossiles = milieu ; superposition = chronologie."),
-    (2, "Manuel", "Expliquer pourquoi les strates sont horizontales à leur dépôt.",
-     "La gravité fait déposer les particules à plat au fond du milieu de sédimentation "
-     "(principe d'horizontalité).\nLes strates inclinées ont été DÉFORMÉES après leur dépôt "
-     "(tectonique).",
-     "Horizontal au dépôt ; incliné = déformation postérieure."),
-    (2, "Contrôle", "Qu'est-ce qu'un fossile ? Dans quelles conditions se forme-t-il le mieux ?",
-     "Reste ou trace d'organisme ancien conservé dans la roche.\nEnfouissement RAPIDE (sédiments "
-     "fins, absence d'oxygène) → protection contre la destruction.",
-     "Enfouissement rapide + milieux calmes = conservation."),
-    (3, "Type Examen Régional",
-     "Une roche : grains arrondis de 5 mm soudés par un ciment calcaire. Nommer la roche et "
-     "raconter son histoire en 4 étapes.",
-     "CONGLOMÉRAT (poudingue).\n① Érosion forte → galets\n② Transport long → arrondis\n"
-     "③ Dépôt (lit de rivière/torrent)\n④ Diagenèse : compactation + cimentation calcaire → roche.",
-     "Nommer PUIS raconter : érosion → transport → dépôt → diagenèse."),
+SVT["Les équilibres naturels"] = [
+    (1, "Manuel", "Distinguer un déséquilibre naturel d'un déséquilibre humain (2 "
+     "exemples de chacun).",
+     "Naturel : sécheresse, incendie naturel (aussi inondation, éruption).\n"
+     "Humain : déforestation, pollution (aussi surpâturage, braconnage).",
+     "Cause humaine = liée à l'activité de l'homme."),
+    (2, "Contrôle", "Pourquoi le reboisement aide-t-il à protéger un sol contre "
+     "l'érosion ?",
+     "Les racines retiennent les particules du sol ; la canopée casse la force des "
+     "pluies et du vent ; la litière freine le ruissellement : le sol est protégé et "
+     "l'eau s'infiltre.",
+     "Végétation = armure du sol."),
+    (2, "Contrôle", "Citer 2 espèces marocaines menacées et 2 parcs nationaux qui les "
+     "protègent.",
+     "Ibis chauve, gazelle dorcas, singe magot, addax...\nParcs : Souss-Massa, Toubkal, "
+     "Ifrane, Al Hoceima, Talassemtane...",
+     "Exemples du programme : ibis chauve ↔ Souss-Massa."),
+    (3, "Type Examen Régional", "Un lac reçoit les eaux chargées d'engrais de champs "
+     "voisins. ① Nommer ce phénomène. ② Décrire ses conséquences en chaîne. ③ Proposer "
+     "2 solutions.",
+     "① L'eutrophisation.\n② Engrais → prolifération d'algues en surface → baisse de la "
+     "lumière et de l'oxygène dissous → mortalité des poissons et des plantes → "
+     "déséquilibre total.\n③ Bandes tampons végétales entre champs et lac ; réduire les "
+     "engrais ; épuration des eaux rejetées.",
+     "Excès de nutriments = asphyxie de l'écosystème aquatique."),
 ]
 
-SVT["La formation des sols"] = [
-    (1, "Manuel", "Décrire le profil d'un sol de haut en bas.",
-     "Horizon A : litière + humus (organique, sombre, fertile)\nHorizon B : minéral fin (argiles, "
-     "souvent rouge au Maroc)\nHorizon C : roche-mère altérée/fragmentée\nRoche saine.",
-     "A organique → B minéral → C altéré → roche."),
-    (1, "Contrôle", "Qu'est-ce que l'humus et comment se forme-t-il ?",
-     "Matière organique décomposée (litière transformée par les décomposeurs : bactéries, "
-     "champignons, vers).\nElle rend le sol fertile et sombre.",
-     "Litière + décomposeurs = humus."),
-    (2, "Contrôle", "Citer le rôle de 3 êtres vivants dans la formation du sol.",
-     "Lichens pionniers : attaquent chimiquement la roche nue, premiers particules.\n"
-     "Végétaux : litière + racines qui fragmentent et retiennent.\n"
-     "Vers de terre : brassent, aèrent, mélangent humus et minéraux.",
-     "Sans vivant, pas de sol : seulement des débris."),
-    (2, "Contrôle", "Formation : 1 cm en 200 ans ; érosion après défrichement : 5 mm/an. Comparer "
-     "et conclure.",
-     "Formation : 0,05 mm/an. Érosion : 5 mm/an = 100 fois plus rapide.\n"
-     "Le sol est une ressource QUASI NON RENOUVELABLE à l'échelle humaine.",
-     "Rapport 100 : 1 en faveur de l'érosion → protection indispensable."),
-    (3, "Type Examen Régional",
-     "Désertification au Maroc : expliquer le mécanisme et proposer 2 mesures de protection.",
-     "Surpâturage/déforestation → sol nu → ruissellement → horizons fertiles emportés → végétation "
-     "ne repousse → désertification (surtout zones arides du Sud et du Rif).\n"
-     "Mesures : reboisement (fixation par racines), mise en défens/rotation des pâturages, "
-     "terrasses, cultures en courbes de niveau.",
-     "Mécanisme en chaîne + 2 mesures concrètes = réponse complète."),
-    (2, "Manuel", "Pourquoi dit-on que le sol est l'interface entre géologie et biologie ?",
-     "Il NAÎT de la roche (géologie : altération de la roche-mère) ET des êtres vivants "
-     "(biologie : humus, décomposeurs, racines).\nIl combine minéral + organique + vivant.",
-     "2 parents : la roche ET la vie."),
+SVT["La reproduction sexuée chez les plantes à fleurs"] = [
+    (1, "Manuel", "Nommer les 4 verticilles d'une fleur complète et leur rôle.",
+     "Sépales (protection), pétales (attraction des pollinisateurs), étamines "
+     "(gamètes mâles : pollen), carpille(s) (gamètes femelles : ovules).",
+     "De l'extérieur vers l'intérieur : S-P-É-C."),
+    (2, "Contrôle", "Comparer les caractères du pollen anémogame et entomogame.",
+     "Anémogame (vent) : léger, sec, très abondant, petit.\nEntomogame (insectes) : "
+     "collant, rugueux, moins abondant ; fleur grande, colorée, parfumée, nectar.",
+     "Le pollen « a la forme » de son transporteur."),
+    (2, "Contrôle", "Une fleur a 4 ovules fécondés. Combien de graines attendues ? Que "
+     "devient chaque ovule fécondé ?",
+     "4 graines (1 ovule fécondé → 1 graine).\nChaque ovule : l'oosphère fécondée → "
+     "embryon ; la cellule centrale fécondée → albumen (réserves) ; les téguments de "
+     "l'ovule → enveloppes de la graine.",
+     "Fécondation double : 2 fusions à chaque ovule."),
+    (3, "Type Examen Régional", "La pollinisation du blé est autogame, celle du pommier "
+     "allogame par abeilles. ① Définir autogamie et allogamie. ② Pourquoi installe-t-on "
+     "des ruches dans les vergers de pommiers ? ③ Une variété autofécondée est-elle plus "
+     "« pure » génétiquement ?",
+     "① Autogamie : le pollen féconde la même fleur (ou la même plante). Allogamie : "
+     "fécondation croisée entre plantes différentes.\n② Les abeilles transportent le "
+     "pollen d'un pommier à l'autre : sans elles, pas (ou peu) de fruits.\n③ OUI : "
+     "l'autogamie fixe les caractères (homozygotie), l'allogamie mélange les gènes.",
+     "Autogamie = stabilité ; allogamie = diversité."),
 ]
 
+SVT["La reproduction sexuée chez les plantes sans fleurs"] = [
+    (1, "Manuel", "Citer les organes reproducteurs mâle et femelle de la mousse.",
+     "Anéridie (mâle : produit les spermatozoïdes biflagellés) ; archégone (femel : "
+     "contient l'oosphère).",
+     "A pour mâle (anéridie), arché- pour femelle (archégone)."),
+    (2, "Contrôle", "Pourquoi la pluie déclenche-t-elle la fécondation chez les mousses ?",
+     "Les spermatozoïdes sont NAGEURS (flagelles) : ils doivent nager dans un film d'eau "
+     "jusqu'à l'oosphère. Sans eau, pas de fécondation possible.",
+     "Fécondation des plantes sans fleurs = besoin d'eau."),
+    (2, "Contrôle", "Décrire le devenir d'une spore de fougère.",
+     "La spore (n) germe sur sol humide → petit PROTHALLE (gamétophyte) portant anéridies "
+     "et archégones → fécondation dans l'eau → zygote (2n) → jeune sporophyte qui pousse "
+     "sur le prothalle → grande fougère.",
+     "Spore → prothalle → fécondation → sporophyte."),
+    (3, "Type Examen Régional", "① Expliquer pourquoi les fougères sont plus grandes que "
+     "les mousses alors que les deux n'ont pas de graines. ② Quelle condition du milieu "
+     "partagent leurs fécondations ? ③ Citer la différence majeure entre fougère et pin.",
+     "① La fougère possède de vrais VAISSAUX conducteurs (et de vraies racines) : elle "
+     "transporte l'eau loin et peut grandir ; la mousse n'en a pas (petite taille, "
+     "milieux humides obligatoires).\n② L'eau (gamètes nageurs dans les deux cas).\n"
+     "③ Fougère = spores, pas de graines ; pin = GRAINES NUES (pas besoin d'eau pour la "
+     "fécondation : pollen par le vent).",
+     "Vaisseaux → taille ; graines → indépendance de l'eau."),
+]
+
+SVT["Les cycles de développement des plantes"] = [
+    (1, "Manuel", "Définir l'alternance des générations (cycle haplodiploïque).",
+     "Alternance régulière d'une génération diploïde (sporophyte 2n, produit des spores "
+     "par méiose) et d'une génération haploïde (gamétophyte n, produit les gamètes) ; la "
+     "fécondation rétablit 2n.",
+     "2n → n (méiose) → n → 2n (fécondation)."),
+    (2, "Contrôle", "La fougère a n = 30 chromosomes. Nombre de chromosomes : spores, "
+     "cellules du prothalle, oosphère, zygote, cellules de la grande fougère ?",
+     "Spores : n = 30 ; prothalle : n = 30 ; oosphère : n = 30 ; zygote : 2n = 60 ; "
+     "grande fougère : 2n = 60.",
+     "Tout ce qui est gamétophyte/gamète = n ; sporophyte/zygote = 2n."),
+    (2, "Contrôle", "Indiquer la phase dominante (visible) chez : mousse, fougère, "
+     "plante à fleurs.",
+     "Mousse : GAMÉTOPHYTE dominant.\nFougère : SPOROPHYTE dominant (prothalle minuscule "
+     "et passager).\nPlante à fleurs : SPOROPHYTE exclusivement (gamétophytes réduits à "
+     "quelques cellules dans la fleur).",
+     "Plus évolué = sporophyte plus dominant."),
+    (3, "Type Examen Régional", "① Où a lieu la méiose chez une plante à fleurs ? "
+     "② Chez la mousse, la plante verte est-elle n ou 2n ? Justifier par le cycle. "
+     "③ Montrer que la réduction du gamétophyte est un avantage terrestre.",
+     "① Dans les SPORANGES : anthères (grains de pollen) et ovules (sacs embryonnaires) — "
+     "elle produit les spores.\n② n (gamétophyte) : c'est elle qui porte les anéridies et "
+     "archégones qui produisent directement les gamètes (sans méiose).\n③ Le jeune "
+     "gamétophyte nu (spore, prothalle) est fragile : en le réduisant et le PROTÉGEANT "
+     "dans l'organe du sporophyte (fleur, ovule), la plante survit mieux au milieu "
+     "terrestre sec.",
+     "Chez les plantes, méiose = spores (PAS les gamètes)."),
+]
+
+SVT["La reproduction asexuée chez les plantes"] = [
+    (1, "Manuel", "Citer 2 modes naturels et 2 techniques artificielles de multiplication "
+     "végétative.",
+     "Naturels : rhizomes, tubercules, bulbes, stolons.\nArtificiels : bouture, "
+     "marcottage, greffe.",
+     "Naturel = l'organe le fait seul ; artificiel = l'homme intervient."),
+    (2, "Contrôle", "Un fraisier émet 4 stolons, chacun s'enracinant en 2 endroits. "
+     "Combien de nouveaux plants, et seront-ils identiques ?",
+     "4 × 2 = 8 nouveaux plants.\nOUI, identiques (clones : reproduction asexuée, même "
+     "ADN que la plante-mère).",
+     "Asexuée = clone garantie."),
+    (2, "Contrôle", "Que gagne un arboriculteur à greffer une variété de bonne qualité "
+     "sur un porte-greffe rustique ?",
+     "Il combine : les FRUITS de la variété greffée (qualité, goût) et les RACINES du "
+     "porte-greffe (vigueur, résistance au sol et aux maladies) ; de plus la mise à fruit "
+     "est plus rapide qu'avec un semis.",
+     "Greffe = mariage des qualités."),
+    (3, "Type Examen Régional", "Une maladie nouvelle attaque une variété de vigne "
+     "multipliée par boutures sur toute une région. ① Pourquoi toutes les vignes sont-elles "
+     "touchées ? ② Quel mode de reproduction aurait limité ce risque ? ③ Citer un "
+     "avantage malgré tout de la multiplication par boutures.",
+     "① Boutures = clones : mêmes gènes → même sensibilité à la maladie (aucune plante "
+     "résistante).\n② La reproduction SEXUÉE (semis) : le mélange des gènes crée de la "
+     "diversité, certains individus pouvant être résistants.\n③ Fidélité totale à la "
+     "variété (qualité du raisin), simplicité, rapidité, sans partenaire.",
+     "Uniformité génétique = vulnérabilité commune."),
+]
+
+SVT["La modification génétique des plantes"] = [
+    (1, "Manuel", "Définir transgenèse et OGM, et citer un vecteur de transfert de gène.",
+     "Transgenèse : transfert d'un gène d'un organisme vers un autre.\nOGM : organisme "
+     "dont le génome a été modifié par l'homme.\nVecteur : Agrobacterium tumefaciens "
+     "(ou canon à particules).",
+     "Agrobacterium = « taxi à gènes »."),
+    (2, "Contrôle", "Un maïs contient un gène de bactérie le rendant toxique pour ses "
+     "insectes ravageurs. ① Nommer cette technique. ② Citer 2 avantages attendus.",
+     "① Transgenèse (maïs Bt = OGM).\n② Moins d'insecticides chimiques (économie, moins "
+     "de pollution) ; meilleur rendement (moins de dégâts).",
+     "Gène Bt de Bacillus thuringiensis."),
+    (2, "Contrôle", "Une nouvelle variété de blé obtenue par croisement avec une variété "
+     "sauvage est-elle un OGM ?",
+     "NON : c'est une hybridation (croisement sexuel naturel entre variétés proches) — "
+     "pas de transfert de gène par laboratoire entre espèces éloignées.",
+     "Croisement naturel ≠ transgenèse."),
+    (3, "Type Examen Régional", "① Décrire les 4 étapes de la transgenèse d'une plante "
+     "résistante à un insecte. ② Pourquoi une réglementation (étiquetage, essais) "
+     "encadre-t-elle les OGM ? Citer 2 raisons.",
+     "① Isolation du gène d'intérêt (de la bactérie) → transfert dans les cellules "
+     "végétales (Agrobacterium ou canon à gènes) → régénération de plantes complètes → "
+     "sélection des plantes exprimant réellement le gène.\n"
+     "② Sécurité sanitaire (effets à long terme évalués) ; environnement (dissémination "
+     "du pollen aux plantes sauvages, effet sur les insectes utiles) ; transparence du "
+     "consommateur.",
+     "Étapes : isoler → transférer → régénérer → sélectionner."),
+]
+
+SVT["La classification des plantes"] = [
+    (1, "Manuel", "Citer les 5 grands groupes de végétaux avec un exemple de chacun.",
+     "Angiospermes (rosier) ; gymnospermes (pin/cèdre) ; fougères (fougère aigle) ; "
+     "mousses (sphaigne) ; algues (laitue de mer).",
+     "Des fleurs aux algues : du plus évolué au plus simple."),
+    (2, "Contrôle", "Une plante verte possède des vaisseaux conducteurs et se reproduit "
+     "par spores. Quel groupe ? Justifier.",
+     "FOUGÈRE : les vaisseaux excluent algues et mousses ; les spores excluent "
+     "gymnospermes et angiospermes (graines).",
+     "Clé : vaisseaux ? → graines ? → fleurs ?"),
+    (2, "Contrôle", "Quel critère unique sépare les conifères des plantes à fleurs ?",
+     "Les conifères ont des GRAINES NUES (dans des cônes, pas de fleurs) ; les plantes à "
+     "fleurs ont des graines enfermées dans un FRUIT issu de l'ovaire.",
+     "Nues (gymno) vs dans le fruit (angio)."),
+    (3, "Type Examen Régional", "Construire une clé à 4 questions permettant de classer "
+     "une plante inconnue dans : algue, mousse, fougère, conifère, plante à fleurs.",
+     "① La plante a-t-elle de vrais organes (racines/tiges avec vaisseaux) ? NON → "
+     "milieu aquatique ? OUI → ALGUE ; NON → MOUSSE.\n"
+     "② OUI → se reproduit-elle par spores ? OUI → FOUGÈRE.\n"
+     "③ NON (graines) → graines nues (cônes) → CONIFÈRE ; graines dans un fruit → "
+     "PLANTE À FLEURS.",
+     "Clé = questions successives, chacune sépare un groupe."),
+]
 
 # ================================================================ FRANÇAIS ===
 FR = {}

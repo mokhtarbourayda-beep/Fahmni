@@ -718,12 +718,12 @@ class LocalTutor:
             "probabilite": "Probabilités", "urne": "Probabilités",
             "fonction": "Généralités sur les fonctions", "image": "Généralités sur les fonctions",
             "antecedent": "Généralités sur les fonctions", "parite": "Généralités sur les fonctions",
-            "trinome": "Équations et inéquations dans ℝ", "discriminant": "Équations et inéquations dans ℝ",
-            "valeur absolue": "Équations et inéquations dans ℝ",
-            "equation du second degre": "Équations et inéquations dans ℝ",
-            "vecteur": "Configurations du plan et vecteurs",
-            "colineaire": "Configurations du plan et vecteurs",
-            "equation de droite": "Configurations du plan et vecteurs",
+            "trinome": "Équations, inéquations et systèmes", "discriminant": "Équations, inéquations et systèmes",
+            "valeur absolue": "Équations, inéquations et systèmes",
+            "equation du second degre": "Équations, inéquations et systèmes",
+            "vecteur": "Calcul vectoriel dans le plan",
+            "colineaire": "Calcul vectoriel dans le plan",
+            "equation de droite": "Calcul vectoriel dans le plan",
             "cercle trigonometrique": "Trigonométrie", "cosinus": "Trigonométrie",
             "sinus": "Trigonométrie", "radian": "Trigonométrie",
             "statistique": "Statistiques", "moyenne": "Statistiques", "medianne": "Statistiques",
@@ -780,7 +780,13 @@ class LLMTutor:
         "(dénombrement, avancement, PGCD, etc.).\n"
         "3. Détaille les étapes de calcul numérotées. Justifie chaque étape.\n"
         "4. Termine par un piège à éviter + une mini-question d'entraînement.\n"
-        "5. Réponses bien structurées (titres, puces), maximum 300 mots."
+        "5. Réponses bien structurées (titres, puces), maximum 300 mots.\n"
+                "6. N'utilise JAMAIS LaTeX ni aucune commande LaTeX : interdits "
+        "\\frac, \\times, \\Rightarrow, \\Longrightarrow, \\sqrt, \\;, "
+        "\\[, \\], $$… Écris les maths en notation simple et lisible : x², x³, "
+        "√5, 12/3, 3×x, 3x − 5 = 7, x₁, x₂, ×, ÷, ⇒, ≥, ≤, ≠, ∈ ℝ, π, Δ. Une "
+        "fraction s'écrit avec une barre oblique (12/3), un produit avec le "
+        "signe ×, une racine avec √."
     )
 
     def __init__(self, cfg):

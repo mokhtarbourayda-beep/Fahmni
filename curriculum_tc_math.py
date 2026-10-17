@@ -668,7 +668,7 @@ EXTRA_TC = {
          "Raisonnement par contraposée : « A ⟹ B » équivaut à « non B ⟹ non A ».",
          V()),
     ],
-    "Équations et inéquations dans ℝ": [
+    "Équations, inéquations et systèmes": [
         (1, "Manuel", "Résoudre le système : { x + y = 10 ; x − y = 4 }",
          "Addition : 2x = 14 → x = 7 ; y = 10 − 7 = 3\nS = {(7 ; 3)}",
          "Méthode par combinaison (addition) ou substitution.",
@@ -689,7 +689,7 @@ EXTRA_TC = {
          V({"enonce": "Résoudre : (2x + 1)(3 − x) > 0.",
             "solution": "Racines −1/2 et 3 ; produit > 0 entre les racines → S = ]−1/2 ; 3["})),
     ],
-    "Configurations du plan et vecteurs": [
+    "Calcul vectoriel dans le plan": [
         (1, "Manuel", "A(1 ; 2), B(4 ; 6), C(7 ; 10). A, B, C sont-ils alignés ?",
          "AB(3 ; 4) ; AC(6 ; 8) = 2·AB → colinéaires → alignés ✓",
          "Coordonnées puis colinéarité xy′ − yx′ = 0 (ici 24 − 24 = 0).",
@@ -840,8 +840,8 @@ def sync(db):
                 n_ex += 1
 
     # 3) semestres des anciens chapitres TC maths
-    SEMESTRES = {"Arithmétique dans ℕ": 1, "Équations et inéquations dans ℝ": 1,
-                 "Configurations du plan et vecteurs": 1, "Trigonométrie": 1,
+    SEMESTRES = {"Arithmétique dans ℕ": 1, "Équations, inéquations et systèmes": 1,
+                 "Calcul vectoriel dans le plan": 1, "Trigonométrie": 1,
                  "Généralités sur les fonctions": 2, "Statistiques": 2}
     for titre, sem in SEMESTRES.items():
         db.execute("UPDATE chapters SET semestre = ? WHERE titre = ? AND niveau = 'TC' "

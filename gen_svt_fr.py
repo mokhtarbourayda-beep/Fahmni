@@ -1,290 +1,352 @@
 # -*- coding: utf-8 -*-
-"""gen_svt_fr.py — Générateurs DYNAMIQUES de SVT et Français (TC).
-Importé par gen_exercices.py : enregistre ses modèles via reg()."""
-
+"""gen_svt_fr.py — Générateurs SVT (programme officiel TC : écologie + botanique)
+et Français. Importé par gen_exercices.py."""
 import random
 from fractions import Fraction as F
-
 from gen_exercices import reg, fmt
 
-# ══════════════════════════════════════════════════════════ SVT ══
-MICRO = ((100, 50), (200, 20), (400, 10), (400, 50), (1000, 5),
-         (200, 100), (400, 120), (1000, 20), (100, 200))
+
+# ═══════════════════════════════════════ S1 · ÉCOLOGIE ══
+ABOND = ("+", "1", "2", "3", "4", "5")
+ABOND_TXT = {"+": "espèce rare (1 seul individu)", "1": "quelques individus",
+             "2": "espèce abondante", "3": "très abondante (25-50 % de recouvrement)",
+             "4": "très abondante (50-75 % de recouvrement)",
+             "5": "dominante (recouvrement > 75 %)"}
 
 
-@reg("SVT", "La cellule, unité de la vie", 2)
-def _svt_micro():
-    g, reel = random.choice(MICRO)
-    obs = g * reel // 1000         # mm observés (entier)
-    return (f"Observée au microscope au grossissement ×{g}, une cellule mesure "
-            f"{obs} mm sur la photo. Calculer sa taille réelle en µm.",
-            f"Taille réelle = taille observée ÷ grossissement\n"
-            f"= {obs} mm ÷ {g} = {fmt(F(reel))} µm",
-            "Convertir le résultat mm → µm (× 1000).")
+@reg("SVT", "Les techniques adaptatives à l'étude écologique sur le terrain", (1, 2))
+def _svt_densite():
+    nq = random.choice((4, 5, 6))
+    n = random.randrange(2, nq)
+    comptes = [random.randrange(1, 9) for _ in range(nq)]
+    moy = F(sum(comptes), nq)
+    surf = random.choice((100, 150, 200, 250))
+    total = moy * surf
+    esp = random.choice(("thym", "romarin", "lavande", "coquelicot", "armoise"))
+    det = " + ".join(str(c) for c in comptes)
+    return (f"Dans {nq} quadrats de 1 m², on compte respectivement {det} plants "
+            f"d'{esp}. ① Densité moyenne ? ② Estimation du nombre total sur "
+            f"{surf} m² ?",
+            f"① Densité = ({det}) ÷ {nq} = {fmt(moy)} plants/m²\n"
+            f"② Total = {fmt(moy)} × {surf} = {fmt(total)} plants",
+            "Moyenne des comptes, puis × surface totale.")
 
 
-@reg("SVT", "La cellule, unité de la vie", 1)
-def _svt_conversions():
-    val, u, micro, nano = random.choice(
-        (("0,02 mm", "0,02", "20", "20 000"), ("0,15 mm", "0,15", "150", "150 000"),
-         ("20 µm", "20", "20", "20 000"), ("5 µm", "5", "5", "5 000"),
-         ("250 µm", "250", "250", "250 000")))
-    return (f"Une cellule mesure {val}. Exprimer sa taille en µm PUIS en nm "
-            "(1 mm = 1000 µm ; 1 µm = 1000 nm).",
-            f"• En micromètres : {micro} µm\n• En nanomètres : {nano} nm",
-            "mm → µm : ×1000 ; µm → nm : ×1000.")
+@reg("SVT", "Les techniques adaptatives à l'étude écologique sur le terrain", (2, 3))
+def _svt_frequence():
+    nq = random.choice((5, 10, 20))
+    n = random.randrange(1, nq)
+    f = F(n * 100, nq)
+    note = random.choice(("2", "3", "4", "5"))
+    esp = random.choice(("chêne-liège", "genêt", "ziziphe", "pistachier"))
+    return (f"L'espèce « {esp} » est présente dans {n} quadrats sur {nq}. "
+            f"① Sa fréquence ? ② Une autre espèce a la note d'abondance-dominance "
+            f"« {note} » : interpréter cette note.",
+            f"① Fréquence = ({n} ÷ {nq}) × 100 = {fmt(f)} %\n"
+            f"② Note {note} : {ABOND_TXT[note]}",
+            "Fréquence = % de quadrats contenant l'espèce ; Braun-Blanquet : de + à 5.")
 
 
-@reg("SVT", "La cellule, unité de la vie", 1)
-def _svt_structures():
-    q, rep, ast = random.choice((
-        ("Citer 3 structures présentes dans une cellule VÉGÉTALE mais absentes d'une cellule animale.",
-         "La paroi cellulosique (rigidité), les chloroplastes (photosynthèse) et la grande vacuole "
-         "centrale (réserve d'eau).", "Le trio végétal : paroi + chloroplastes + vacuole."),
-        ("Citer 3 structures communes aux cellules animale ET végétale.",
-         "La membrane plasmique, le cytoplasme et le noyau (ainsi que les mitochondries).",
-         "Le socle commun des cellules eucaryotes."),
-        ("Qu'est-ce qui distingue une cellule PROCARYOTE d'une cellule eucaryote ?",
-         "Le procaryote (bactéries) n'a PAS de noyau (ADN libre dans le cytoplasme) ni "
-         "d'organites membranaires ; l'eucaryote a un noyau délimité par une enveloppe.",
-         "Pas de noyau = procaryote."),
-        ("Quelle est la fonction des mitochondries ? Et des chloroplastes ?",
-         "Mitochondries → respiration cellulaire (libèrent l'énergie) ; chloroplastes → "
-         "photosynthèse (fabriquent la matière organique avec la lumière).",
-         "Énergie = mitochondrie ; fabrication avec lumière = chloroplaste.")))
-    return (q, rep, ast)
+@reg("SVT", "Les facteurs édaphiques et leurs relations avec les êtres vivants", 1)
+def _svt_texture():
+    sab = random.randrange(15, 60, 5)
+    arg = random.randrange(10, 45, 5)
+    lim = 100 - sab - arg
+    tex = ("sableux" if sab >= 45 else "argileux" if arg >= 45 else
+           "limoneux" if lim >= 45 else "équilibré (limono-sablo-argileux)")
+    dom = max(("sable", sab), ("limon", lim), ("argile", arg), key=lambda p: p[1])[0]
+    return (f"Un sol contient {sab} % de sable, {lim} % de limon et {arg} % d'argile. "
+            "① Vérifier que les pourcentages totalisent 100 %. ② Quelle est la texture "
+            "dominante ? ③ Quel type de sol obtient-on ?",
+            f"① {sab} + {lim} + {arg} = 100 %\n② Le constituant majoritaire : {dom} "
+            f"({max(sab, lim, arg)} %)\n③ Sol {tex}",
+            "Texture = constituant le plus abondant ; total forcément 100 %.")
 
 
-@reg("SVT", "Biodiversité et classification", 1)
-def _svt_facteurs():
-    banc = {"la température": "abiotique", "la prédation": "biotique",
-            "la pluviométrie": "abiotique", "la compétition": "biotique",
-            "la salinité du sol": "abiotique", "la pollinisation": "biotique",
-            "la lumière": "abiotique", "l'action humaine": "biotique",
-            "la nature du sol": "abiotique", "la symbiose": "biotique"}
-    items = random.sample(sorted(banc), 5)
-    abio = [i for i in items if banc[i] == "abiotique"]
-    bio = [i for i in items if banc[i] == "biotique"]
-    return ("Classer ces facteurs écologiques en ABIOTIQUES / BIOTIQUES :\n"
-            + "\n".join(f"• {i}" for i in items),
-            "Abiotiques (non vivants) : " + ", ".join(abio) + "\n"
-            "Biotiques (liés aux êtres vivants) : " + ", ".join(bio),
-            "Abiotique = élément physique du milieu ; biotique = interaction avec le vivant.")
+@reg("SVT", "Les facteurs édaphiques et leurs relations avec les êtres vivants", (2, 3))
+def _svt_sol_eau():
+    sab = random.randrange(60, 90, 5)
+    reste = 100 - sab
+    return (f"Un sol sableux contient {sab} % de sable et {reste} % d'autres éléments. "
+            "① Que peuvent-on dire de ses pores ? ② Comportement vis-à-vis de l'eau ? "
+            "③ Quels êtres vivants l'améliorent et comment ?",
+            "① Particules grosses → pores larges entre elles.\n"
+            "② Très PERMÉABLE : l'eau s'infiltre et s'écoule vite, faible rétention → "
+            "sol sec.\n③ Les LOMBRICS : galeries (aération, infiltration) + déjections "
+            "en humus ; les décomposeurs produisent l'humus.",
+            "Taille des particules → taille des pores → rétention d'eau.")
 
 
-ESPECES = [("Panthera", "leo", "lion"), ("Panthera", "tigris", "tigre"),
-           ("Felis", "catus", "chat domestique"), ("Quercus", "suber", "chêne-liège"),
-           ("Quercus", "rotundifolia", "chêne vert"), ("Pinus", "halepensis", "pin d'Alep"),
-           ("Giraffa", "camelopardalis", "girafe")]
+@reg("SVT", "Les facteurs climatiques et leurs relations avec les êtres vivants", (1, 2))
+def _svt_amplitude():
+    tmin = random.randrange(-2, 15)
+    tmax = tmin + random.randrange(8, 22)
+    amp = tmax - tmin
+    instr = random.choice((("pluviomètre", "précipitations (mm d'eau)"),
+                           ("hygromètre", "humidité de l'air (%)"),
+                           ("anémomètre", "vitesse du vent (km/h)"),
+                           ("photomètre", "l'intensité lumineuse (lux)")))
+    return (f"① Une station enregistre {tmin} °C au minimum et {tmax} °C au maximum : "
+            f"calculer l'amplitude thermique. ② Quel facteur climatique mesure un "
+            f"{instr[0]} et en quelle unité ?",
+            f"① Amplitude = {tmax} − ({tmin}) = {amp} °C\n"
+            f"② Le {instr[0]} mesure {instr[1]}",
+            "Amplitude = max − min ; connaître les 5 instruments du climat.")
 
 
-@reg("SVT", "Biodiversité et classification", 2)
-def _svt_nomenclature():
-    genres = {}
-    for g, e, n in ESPECES:
-        genres.setdefault(g, []).append((e, n))
-    genre = random.choice([g for g, l in genres.items() if len(l) >= 2])
-    (e1, n1), (e2, n2) = random.sample(genres[genre], 2)
-    autre = random.choice([x for x in ESPECES if x[0] != genre])
-    return (f"{genre} {e1} ({n1}) et {genre} {e2} ({n2}) ; {autre[0]} {autre[1]} ({autre[2]}). "
-            "Que déduire des noms scientifiques ?",
-            f"• {n1} et {n2} : même GENRE ({genre}) → très proches (ressemblances fortes)\n"
-            f"• {autre[2]} : genre différent ({autre[0]}) → parenté plus éloignée\n"
-            "Le binôme de Linné (Genre espèce) reflète la classification.",
-            "Même genre = grands-parents communs dans l'arbre de classification.")
+@reg("SVT", "Les facteurs climatiques et leurs relations avec les êtres vivants", 3)
+def _svt_ombro():
+    p = random.choice((8, 12, 15, 20, 25))
+    return (f"Un mois d'été enregistre {p} mm de précipitations et une température "
+            "moyenne de 24 °C. ① Ce mois est-il sec ou humide ? Justifier. ② Citer 2 "
+            "adaptations des végétaux à ce régime. ③ Donner le nom des plantes adaptées "
+            "à la sécheresse.",
+            f"① {p} mm est très faible : mois SEC (sur le diagramme ombrothermique, la "
+            "courbe des pluies passe sous celle des températures).\n"
+            "② Feuilles réduites ou transformées (aiguilles, épines) ; cuticule épaisse ; "
+            "racines profondes.\n③ Les xérophytes (ex : arganier, olivier, genêt).",
+            "Mois sec : pluies insuffisantes par rapport à la chaleur.")
 
 
-RANGS = ["embranchement", "classe", "ordre", "famille", "genre", "espèce"]
+@reg("SVT", "Flux de la matière et de l'énergie dans l'écosystème", 1)
+def _svt_chaine():
+    chaines = (("herbe", "sauterelle", "lézard", "faucon"),
+               ("glands", "sanglier", "lynx"),
+               ("algues", "zooplancton", "sardine", "thon"),
+               ("roseaux", "criquet", "grenouille", "serpent"))
+    c = random.choice(chaines)
+    fleche = " → ".join(c)
+    return (f"Construire la chaîne trophique à partir de : {', '.join(reversed(c))}. "
+            "Préciser le rôle (niveau trophique) de chaque maillon.",
+            f"{c[0]} → {c[1]} → " + (" → ".join(c[2:]) if len(c) > 3 else c[2]) + "\n"
+            f"{c[0]} : producteur ; {c[1]} : consommateur C1 (herbivore) ; " +
+            (f"{c[2]} : C2 (carnivore) ; {c[3]} : C3 (super-prédateur)."
+             if len(c) > 3 else f"{c[2]} : C2 (carnivore)."),
+            "Commencer par le producteur vert ; flèches = « est mangé par ».")
 
 
-@reg("SVT", "Biodiversité et classification", 2)
-def _svt_hierarchie():
-    sous = sorted(random.sample(RANGS, 4), key=RANGS.index)
-    melange = sous[:]
-    while melange == sous:
-        random.shuffle(melange)
-    return ("Remettre dans l'ordre hiérarchique (du plus grand au plus précis) : "
-            + " > ".join(melange) + ".",
-            " > ".join(sous),
-            "Mémo : « Embrasse Claude Ou Franchement Georges Espère ».")
+@reg("SVT", "Flux de la matière et de l'énergie dans l'écosystème", (2, 3))
+def _svt_pyramide():
+    b = random.choice((1000, 2000, 4000, 5000))
+    niv = random.choice((2, 3))
+    lignes = [f"Producteurs : {b} kg"]
+    cour = b
+    noms = ["herbivores (C1)", "carnivores (C2)", "super-prédateurs (C3)"]
+    for i in range(niv):
+        cour = cour * 10 // 100
+        lignes.append(f"{noms[i]} : {cour} kg")
+    return (f"Une prairie porte {b} kg de biomasse végétale. En admettant un rendement "
+            f"de 10 % par niveau, calculer la biomasse maximale de {noms[0].split()[0]} "
+            "puis des niveaux suivants (" + str(niv) + " niveaux).",
+            "\n".join(lignes) + "\n\nÀ chaque niveau, seule ~10 % de l'énergie passe : "
+            "d'où des pyramides écologiques décroissantes.",
+            "Multiplier successivement par 10/100.")
 
 
-@reg("SVT", "L'origine de la biodiversité", 2)
-def _svt_etapes():
-    etapes = ["Une mutation aléatoire modifie l'ADN d'un individu",
-              "Le nouvel allèle se transmet à la descendance",
-              "Le milieu sélectionne les individus les mieux adaptés",
-              "L'allèle favorable devient majoritaire dans la population"]
-    melange = etapes[:]
-    while melange == etapes:
-        random.shuffle(melange)
-    lettres = "ABCD"
-    return ("Remettre dans l'ordre logique de l'évolution :\n"
-            + "\n".join(f"{lettres[i]}) {e}" for i, e in enumerate(melange)),
-            " → ".join(f"{lettres[etapes.index(e)]}) {e}" for e in etapes),
-            "La mutation CRÉE (hasard) ; le milieu TRI (sélection) ; la population évolue.")
+@reg("SVT", "Les équilibres naturels", (1, 2))
+def _svt_desequilibre():
+    causes = (("déforestation", "érosion des sols, perte d'habitat, baisse de la nappe"),
+              ("surpâturage", "disparition du couvert végétal, désertification"),
+              ("rejets d'engrais dans un lac", "eutrophisation, mortalité des poissons"),
+              ("braconnage", "disparition des espèces chassées, chaînes trophiques rompues"))
+    c, eff = random.choice(causes)
+    return (f"Quelles sont les conséquences possibles de {c} sur un écosystème ? "
+            "Ce déséquilibre est-il naturel ou humain ? Citer un moyen de lutte.",
+            f"Cause HUMAINE.\nConséquences : {eff}.\n"
+            "Moyens : aire protégée / reboisement / réglementation / sensibilisation "
+            "(au choix selon la cause).",
+            "Raisonner en chaîne : cause → dégradation → effets en cascade.")
 
 
-@reg("SVT", "L'origine de la biodiversité", 3)
-def _svt_antibio():
-    ab = random.choice(("la pénicilline", "l'amoxicilline", "l'érythromycine"))
-    return (f"Après des années d'utilisation de {ab}, certaines bactéries y résistent. "
-            "Expliquer en 4 étapes (sélection naturelle).",
-            f"① Des mutations ALÉATOIRES rendent quelques bactéries résistantes\n"
-            f"② {ab.capitalize()} tue les sensibles, épargne les résistantes (pression de sélection)\n"
-            "③ Les résistantes se multiplient sans compétition\n"
-            "④ La population devient résistante : l'antibiotique est inefficace",
-            "L'antibiotique NE CRÉE PAS la résistance : il la SÉLECTIONNE.")
+@reg("SVT", "Les équilibres naturels", 3)
+def _svt_parc():
+    parcs = (("Souss-Massa", "l'ibis chauve"), ("Toubkal", "le singe magot"),
+             ("Ifrane", "le cèdre de l'Atlas"), ("Al Hoceima", "le phoque moindre"))
+    p, esp = random.choice(parcs)
+    return (f"① Citer un parc national marocain et une espèce qu'il protège (autre que "
+            f"{p}). ② Pourquoi crée-t-on des aires protégées ? ③ Citer 2 actions "
+            "concrètes de préservation de la nature.",
+            "① Ex : Parc national de Souss-Massa → ibis chauve ; Toubkal → magot ; "
+            "Ifrane → cèdre.\n② Protéger les espèces menacées ET leurs habitats : "
+            "maintenir les équilibres naturels et la biodiversité.\n"
+            "③ Reboisement ; lutte contre le braconnage (surveillance) ; épuration des "
+            "eaux ; sensibilisation.",
+            "Protéger l'espèce = protéger son milieu.")
 
 
-@reg("SVT", "L'origine de la biodiversité", 1)
-def _svt_preuves():
-    p, ex = random.choice((
-        ("les FOSSILES", "les séries évolutives du cheval ou des cétacés"),
-        ("l'ANATOMIE comparée", "le même plan du membre antérieur chez l'humain, la chauve-souris "
-                                "et la baleine"),
-        ("l'EMBRYOLOGIE comparée", "les embryons de vertébrés très semblables aux premiers stades")))
-    return (f"Citer une preuve de l'évolution parmi les traces du passé et donner un exemple.",
-            f"Preuve : {p}\nExemple : {ex}.",
-            "3 familles de preuves : fossiles, anatomie, embryologie.")
+# ═══════════════════════════════════════ S2 · BOTANIQUE ══
+@reg("SVT", "La reproduction sexuée chez les plantes à fleurs", (1, 2))
+def _svt_fleur():
+    q = random.choice((
+        ("Où sont produits les gamètes mâles et femelles d'une fleur ?",
+         "Gamètes mâles : dans les ANTHÈRES des étamines (grains de pollen).\n"
+         "Gamètes femelles : dans les SACS EMBRYONNAIRES des ovules, à l'intérieur du "
+         "carpille."),
+        ("Que deviennent l'ovule, l'ovaire et le zygote après la fécondation ?",
+         "Ovule fécondé → GRAINE ; ovaire → FRUIT ; zygote (œuf) → EMBRYON de la "
+         "nouvelle plante."),
+        ("Nommer les pièces florales de l'extérieur vers l'intérieur avec leur rôle.",
+         "Sépales (protection) → pétales (attraction) → étamines (pollen) → carpille "
+         "(ovules)."),
+        ("Distinguer pollinisation et fécondation.",
+         "Pollinisation : TRANSPORT du pollen de l'étamine au stigmate (vent, insectes).\n"
+         "Fécondation : FUSION des gamètes (tube pollinique → oosphère), dans l'ovule.")))
+    return (f"{q[0]}", q[1],
+            "Fleur : étamines = mâle, carpille = femelle ; après fécondation : graine + fruit.")
 
 
-EROSIONS = (("un bloc de granite éclaté en haute montagne où l'eau gèle la nuit",
-             "érosion MÉCANIQUE", "le gel fissure et fragmente la roche (+9 % de volume en "
-             "gelant)"),
-            ("une eau de source claire qui contient du calcaire dissous",
-             "érosion CHIMIQUE", "l'eau légèrement acide DISSOUT la roche calcaire (ions invisibles)"),
-            ("des galets bien ronds au fond d'un oued", "érosion MÉCANIQUE (transport)",
-             "les frottements mutuels pendant le transport polissent les galets"),
-            ("des roches polies et des dunes dans le désert", "érosion MÉCANIQUE (vent)",
-             "le vent ponce les roches (corrasion) et déplace le sable"),
-            ("une falaise attaquée par les vagues", "érosion MÉCANIQUE (vagues)",
-             "le choc répété des vagues arrache des fragments de falaise"),
-            ("une grotte creusée dans un massif calcaire", "érosion CHIMIQUE",
-             "dissolution lente du calcaire par les eaux acides"))
+@reg("SVT", "La reproduction sexuée chez les plantes à fleurs", (2, 3))
+def _svt_pollinisation():
+    mode = random.choice(("vent (anémogame)", "insectes (entomogame)"))
+    if "an" in mode:
+        car = ("léger, sec, très abondant, petit",
+               "fleurs discrètes, étamines saillantes (ex : pin, blé, olivier)")
+    else:
+        car = ("collant, rugueux, moins abondant",
+               "fleurs grandes, colorées, parfumées, avec nectar (ex : rose, pommier)")
+    n = random.choice((4, 5, 6, 8))
+    return (f"① Caractériser la pollinisation par le {mode} : aspect du pollen et "
+            "traits de la fleur. ② Une fleur de pois contient "
+            f"{n} ovules : combien de graines maximum après fécondation ? Combien de "
+            "fécondations de l'oosphère ?",
+            f"① Pollen {car[0]} ; fleur : {car[1]}.\n"
+            f"② 1 ovule fécondé → 1 graine : maximum {n} graines, donc {n} fécondations "
+            "de l'oosphère (et autant de la cellule centrale : fécondation DOUBLE).",
+            "Mode de pollinisation ↔ caractères du pollen et de la fleur.")
 
 
-@reg("SVT", "L'érosion : l'action de l'eau sur les roches", 2)
-def _svt_type_erosion():
-    sit, typ, just = random.choice(EROSIONS)
-    return (f"Identifier le type d'érosion : {sit}. Justifier.",
-            f"→ {typ}\nJustification : {just}.",
-            "Fragmentation/débbris visibles = mécanique ; ions dissous/grottes = chimique.")
+@reg("SVT", "La reproduction sexuée chez les plantes sans fleurs", (1, 2))
+def _svt_sans_fleurs():
+    q = random.choice((
+        ("Décrire la reproduction sexuée de la mousse.",
+         "Anéridies (mâles) produisent des spermatozoïdes NAGEURS → ils nagent (eau de "
+         "pluie) vers l'archégone → fécondation de l'oosphère → sporophyte → SPORES par "
+         "méiose → nouvelles mousses.\nL'eau est INDISPENSABLE."),
+        ("Décrire le rôle du prothalle chez la fougère.",
+         "La spore germe en PROTHALLE (gamétophyte miniature, indépendant) : il porte "
+         "anéridies et archégones ; la fécondation y a lieu dans l'eau ; le zygote y "
+         "donne le jeune sporophyte (la grande fougère)."),
+        ("Pourquoi les plantes sans fleurs vivent-elles en milieux humides ?",
+         "Leurs gamètes mâles sont flagellés et doivent NAGER jusqu'au gamète femelle : "
+         "sans film d'eau, pas de fécondation (mousses, fougères, algues)."),
+        ("Comparaison fougère / pin : deux différences majeures de reproduction.",
+         "Fougère : spores + fécondation nécessitant l'eau.\nPin : GRAINES NUES dans des "
+         "cônes + pollen par le vent (pas besoin d'eau libre).")))
+    return (f"{q[0]}", q[1],
+            "Sans fleurs : gamètes nageurs, spores ; l'eau conditionne la fécondation.")
 
 
-AGENTS = {"le gel": "éboulis et roches éclatées en haute montagne",
-          "l'eau courante": "vallées en V et galets arrondis",
-          "le vent": "roches polies (corrasion) et dunes de sable",
-          "les vagues": "falaises rongées et plateformes d'abrasion",
-          "l'humain": "érosion accélérée après déforestation (ruissellement)"}
+@reg("SVT", "Les cycles de développement des plantes", (1, 2))
+def _svt_cycle_n():
+    n = random.choice((10, 12, 16, 20, 24, 30))
+    plante = random.choice(("mousse", "fougère", "pin", "rosier"))
+    gam = "gamétophyte" if plante == "mousse" else "sporophyte"
+    return (f"Chez {plante == 'la mousse' and 'une mousse' or 'une ' + plante}, "
+            f"la phase {gam} a n = {n} chromosomes. Donner le nombre de chromosomes de : "
+            "ses cellules, ses spores, ses gamètes et son zygote.",
+            f"Cellules {gam} : n = {n} ; spores : n = {n} (méiose) ; gamètes : n = {n} ; "
+            f"zygote : 2n = {2 * n} (fécondation) → donne le sporophyte.",
+            "Spores et gamètes = n ; zygote et sporophyte = 2n.")
 
 
-@reg("SVT", "L'érosion : l'action de l'eau sur les roches", 1)
-def _svt_agents():
-    agent = random.choice(sorted(AGENTS))
-    autres = [a for a in AGENTS if a != agent]
-    intru = random.choice(autres)
-    return (f"Quel agent d'érosion laisse cette trace : « {AGENTS[agent]} » ? "
-            f"(Attention : un des propos est un piège, « {intru} » est possible mais pas ici)",
-            f"→ {agent}.",
-            "Chaque agent a sa signature : relis le paysage décrit.")
+@reg("SVT", "Les cycles de développement des plantes", 3)
+def _svt_cycle_phase():
+    return ("① Définir l'alternance des générations. ② Donner la phase dominante chez : "
+            "mousse, fougère, plante à fleurs. ③ Où a lieu la méiose chez les plantes ?",
+            "① Alternance régulière d'un sporophyte (2n, → spores par méiose) et d'un "
+            "gamétophyte (n, → gamètes) : cycle haplodiploïque.\n"
+            "② Mousse : GAMÉTOPHYTE dominant ; fougère : sporophyte dominant (prothalle "
+            "réduit) ; plante à fleurs : sporophyte exclusif (gamétophytes miniatures "
+            "dans la fleur).\n③ Dans les SPORANGES (anthères et ovules) : elle produit "
+            "les spores — jamais les gamètes chez les plantes.",
+            "Chez les plantes : méiose → spores ; gamètes par mitose du gamétophyte.")
 
 
-@reg("SVT", "L'érosion : l'action de l'eau sur les roches", 1)
-def _svt_transport():
-    mode, det = random.choice((
-        ("par SUSPENSION", "les particules fines (argiles) restent en suspension → eau trouble"),
-        ("par SALTATION", "les grains de sable progressent par petits sauts sur le fond"),
-        ("par ROULISSEMENT", "les galets roulent sur le fond et se polissent mutuellement")))
-    return (f"Décrire le transport {mode} dans un cours d'eau.",
-            det + "\nPlus le courant ralentit, plus les gros éléments se déposent (tri par taille).",
-            "Fines → suspension ; sable → saltation ; galets → roulissement.")
+@reg("SVT", "La reproduction asexuée chez les plantes", (1, 2))
+def _svt_vegetative():
+    modes = (("rhizome", "iris, bambou"), ("tubercule", "pomme de terre"),
+             ("bulbe", "oignon, tulipe"), ("stolon", "fraisier"))
+    m, ex = random.choice(modes)
+    tech = random.choice(("bouture", "marcottage", "greffe"))
+    det = {"bouture": "couper un fragment de tige/feuille et le planter : il s'enracine",
+           "marcottage": "enterrer une branche SANS la couper, la séparer une fois "
+                         "enracinée",
+           "greffe": "fixer un greffon (fragment de la variété voulue) sur un "
+                     "porte-greffe aux racines vigoureuses"}
+    return (f"① Donner un exemple de multiplication naturelle par {m}. ② Décrire la "
+            f"technique de {tech}. ③ Les plantes obtenues sont-elles identiques ? "
+            "Justifier.",
+            f"① {m.capitalize()} : {ex}.\n② {tech.capitalize()} : {det[tech]}.\n"
+            "③ OUI : reproduction ASEXUÉE (végétative) → clones, même patrimoine "
+            "génétique que la plante-mère.",
+            "Asexuée = sans gamètes ni fécondation = clones.")
 
 
-ROCHES = (("des galets (> 2 mm) soudés", "un CONGLOMÉRAT (poudingue)"),
-          ("des grains de sable", "un GRÈS"),
-          ("des particules d'argile très fines", "une ARGILITE (ou marnes si + calcaire)"),
-          ("des débris de coquilles", "un CALCAIRE ORGANOGÈNE"))
+@reg("SVT", "La reproduction asexuée chez les plantes", 3)
+def _svt_greffe_debat():
+    nb, par = random.choice(((5, 4), (6, 3), (8, 4)))
+    return (f"Un agriculteur plante {nb} tubercules portant chacun {par} bourgeons "
+            "viables. ① Combien de plants espérer ? Sont-ils identiques ? ② Quel risque "
+            "partagé par une culture entièrement clonée ?",
+            f"① {nb} × {par} = {nb * par} plants, TOUS identiques à la plante-mère "
+            "(clones).\n② Même patrimoine génétique = même sensibilité aux maladies : "
+            "une maladie peut détruire toute la culture (d'où la diversité apportée par "
+            "la reproduction sexuée).",
+            "Clonage : fidélité + rapidité, mais vulnérabilité commune.")
 
 
-@reg("SVT", "La sédimentation et les roches sédimentaires", 1)
-def _svt_roche():
-    sed, roc = random.choice(ROCHES)
-    sens = random.random() < 0.5
-    if sens:
-        return (f"Quelle roche sédimentaire se forme à partir de {sed} (après diagenèse) ?", roc,
-                "Galets → conglomérat ; sable → grès ; argile → argilite ; coquilles → calcaire.")
-    return (f"De quel sédiment provient {roc} ?", sed,
-            "Grain = sédiment ; roche = sédiment consolidé par la diagenèse.")
+@reg("SVT", "La modification génétique des plantes", (1, 2))
+def _svt_transgenese():
+    return ("① Rappeler les étapes de la transgenèse d'une plante. ② Citer un vecteur "
+            "de transfert de gène. ③ Donner un exemple d'application agricole.",
+            "① Isoler le gène d'intérêt → le transférer dans les cellules de la plante → "
+            "régénérer des plantes complètes → sélectionner celles qui expriment le "
+            "gène.\n② La bactérie Agrobacterium tumefaciens (ou le canon à "
+            "particules).\n③ Maïs Bt résistant aux insectes ; soja tolérant un "
+            "herbicide ; riz doré enrichi en provitamine A.",
+            "Isoler → transférer → régénérer → sélectionner.")
 
 
-@reg("SVT", "La sédimentation et les roches sédimentaires", 2)
-def _svt_falaise():
-    fm, ft = (random.choice(("des ammonites", "des oursins fossiles", "des coquilles marines")),
-              random.choice(("des os de mammifères", "du pollen terrestre", "des feuilles fossiles")))
-    return (f"Une falaise montre 3 couches horizontales : couche 1 (en bas) contient {fm}, "
-            f"la couche 2 est sableuse, la couche 3 (en haut) contient {ft}. "
-            "Reconstituer l'histoire du lieu.",
-            "Superposition : couche 1 la plus ANCIENNE, couche 3 la plus récente.\n"
-            f"① Couche 1 ({fm}) → dépôt en milieu MARIN : la mer occupait le lieu\n"
-            "② Couche 2 sableuse → littoral (plage)\n"
-            f"③ Couche 3 ({ft}) → milieu TERRESTRE : la mer s'est retirée (régression)\n"
-            "Histoire : mer → littoral → terre.",
-            "Fossiles = milieu ; superposition = chronologie.")
+@reg("SVT", "La modification génétique des plantes", 3)
+def _svt_ogm_debat():
+    return ("Un maïs transgénique produit lui-même un insecticide. ① S'agit-il d'un OGM ? "
+            "Justifier. ② Citer 2 avantages et 2 risques discutés. ③ Un croisement du "
+            "maïs avec une variété sauvage donne-t-il un OGM ?",
+            "① OUI : son génome a été modifié par l'homme (gène Bt de bactérie inséré par "
+            "transgenèse).\n② Avantages : moins d'insecticides chimiques, meilleur "
+            "rendement. Risques : dissémination du gène par le pollen, effets sur les "
+            "insectes utiles et la biodiversité, dépendance aux semenciers.\n"
+            "③ NON : un croisement (hybridation) est un échange naturel de gènes entre "
+            "plantes proches — pas un transfert par ingénierie génétique.",
+            "OGM = modification par l'homme du génome ; hybridation = croisement naturel.")
 
 
-@reg("SVT", "La sédimentation et les roches sédimentaires", 2)
-def _svt_diagenese():
-    ciment = random.choice(("la calcite", "la silice"))
-    return (f"Définir la diagenèse et citer ses 2 mécanismes principaux. Quel ciment si c'est "
-            f"{ciment} qui soude les grains ?",
-            "Diagenèse = passage du sédiment meuble à la roche cohérente.\n"
-            "① COMPACTATION : le poids des couches supérieures tasse le sédiment et chasse l'eau\n"
-            f"② CIMENTATION : des minéraux dissous ({ciment}) précipitent entre les grains et les "
-            "soudent.",
-            "Tasser + coller = diagenèse.")
+@reg("SVT", "La classification des plantes", (1, 2))
+def _svt_classer():
+    groupes = random.sample(
+        [("pin", "gymnosperme (graines nues dans des cônes)"),
+         ("rosier", "angiosperme (fleurs, graines dans un fruit)"),
+         ("fougère aigle", "fougère (vaisseaux, reproduction par spores)"),
+         ("sphaigne", "mousse (sans vaisseaux, milieu humide, spores)"),
+         ("laitue de mer", "algue (pas de vrais organes, milieu aquatique)")], 3)
+    especes = ", ".join(g[0] for g in groupes)
+    sol = "\n".join(f"{g[0]} → {g[1]}" for g in groupes)
+    return (f"Classer les plantes suivantes dans leur groupe : {especes}. Justifier "
+            "chaque choix par un critère.",
+            sol,
+            "Critères : vaisseaux ? graines ? nues ou dans un fruit ? fleurs ?")
 
 
-@reg("SVT", "La formation des sols", 1)
-def _svt_profil():
-    niveaux = ["horizon A (litière + humus sombre)", "horizon B (minéral fin, argiles)",
-               "horizon C (roche-mère altérée)", "roche saine"]
-    melange = niveaux[:]
-    while melange == niveaux:
-        random.shuffle(melange)
-    return ("Remettre dans l'ordre (de la SURFACE vers la PROFONDEUR) :\n"
-            + "\n".join(f"{chr(65 + i)}) {n}" for i, n in enumerate(melange)),
-            " → ".join(f"{chr(65 + niveaux.index(n))}) {n}" for n in niveaux),
-            "A organique → B minéral → C altéré → roche saine.")
-
-
-@reg("SVT", "La formation des sols", (2, 3))
-def _svt_vitesse():
-    x = random.choice((100, 200, 250, 400))
-    e = random.choice((1, 2, 5))
-    taux = F(10, x)                       # mm/an de formation
-    rapport = F(e) / taux                 # érosion / formation
-    return (f"Un sol se forme à raison de 1 cm tous les {x} ans. Après un défrichement, "
-            f"l'érosion emporte {e} mm par an. Comparer formation et érosion.",
-            f"Formation : 1 cm = 10 mm en {x} ans → {fmt(taux)} mm/an\n"
-            f"Érosion : {e} mm/an → l'érosion est {fmt(rapport)} fois PLUS RAPIDE que la formation\n"
-            f"Conclusion : le sol est une ressource QUASI NON RENOUVELABLE (il faudrait {x} ans "
-            "pour reconstituer 1 cm).",
-            "Convertir 1 cm = 10 mm avant de diviser.")
-
-
-@reg("SVT", "La formation des sols", 2)
-def _svt_acteurs():
-    org, role = random.choice((
-        ("les LICHENS pionniers", "ils attaquent chimiquement la roche nue et produisent les "
-         "premières particules"),
-        ("les VÉGÉTAUX", "ils apportent la litière (futur humus) et leurs racines fragmentent et "
-         "retiennent le sol"),
-        ("les VERS DE TERRE", "ils brassent, aèrent et mélangent la matière organique aux "
-         "particules minérales"),
-        ("les DÉCOMPOSEURS (bactéries, champignons)", "ils transforment la litière morte en humus")))
-    return (f"Quel est le rôle des {org.replace('les ', '', 1)} dans la formation d'un sol ?",
-            role + ".", "Sans êtres vivants : des débris minéraux, mais pas de sol.")
+@reg("SVT", "La classification des plantes", 3)
+def _svt_cle():
+    return ("Élaborer une clé de détermination simple permettant de classer une plante "
+            "inconnue dans : algue, mousse, fougère, conifère, plante à fleurs.",
+            "① Vrais organes avec vaisseaux ? NON → ② ; OUI → ③.\n"
+            "② Milieu aquatique ? OUI → ALGUE ; NON (milieu humide) → MOUSSE.\n"
+            "③ Reproduction par spores ? OUI → FOUGÈRE ; NON (graines) → ④.\n"
+            "④ Graines nues (cônes) → CONIFÈRE (gymnosperme) ; graines dans un fruit → "
+            "PLANTE À FLEURS (angiosperme).",
+            "Clé = questions successives, chaque question sépare un groupe.")
 
 
 # ════════════════════════════════════════════════════ FRANÇAIS ══
