@@ -1,0 +1,7 @@
+{
+  "api_key": "",
+  "base_url": "https://api.groq.com/openai/v1",
+  "model": "openai/gpt-oss-120b",
+  "tts_voice": "fr-FR-HenriNeural",
+  "public_url": ""
+}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord — FAHMNI{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="page-head">
+    <div>
+      <h1>Salam {{ user['prenom'] }} ! 👋</h1>
+      <p class="muted">{{ NIVEAU_LABEL[niveau] }} — prêt pour aujourd'hui ?</p>
+    </div>
+    <a class="btn btn-gold" href="{{ url_for('prof') }}">🤖 Demander au Prof Atlas</a>
+  </div>
+
+  <div class="grid4 dash-stats">
+    <div class="stat"><b>{{ tutor_count }}</b><span>questions au Prof</span></div>
+    <div class="stat"><b>{{ mes_groupes|length }}</b><span>mes groupes</span></div>
+    <div class="stat"><b>{{ counts.values()|sum if counts else 0 }}</b><span>chapitres disponibles</span></div>
+    <div class="stat"><b>{{ ex_counts.values()|sum if ex_counts else 0 }}</b><span>exercices corrigés</span></div>
+  </div>
+
+  <div class="section-head" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+    <h2 class="section-title" style="margin:0">Mes matières — {{ NIVEAU_LABEL[niveau] }}</h2>
+    <div class="tabs">
+      <a class="tab {% if niveau == 'TC' %}active{% endif %}" href="{{ url_for('dashboard', niveau='TC') }}">Tronc Commun</a>
+      <a class="tab {% if niveau == '1BAC' %}active{% endif %}" href="{{ url_for('dashboard', niveau='1BAC') }}">1ère Bac</a>
+    </div>
+  </div>
+  <div class="grid4">
+    {% for s in subjects %}
+    <a class="matiere-card matiere-link" style="--mc: {{ s.couleur }}"
+       href="{{ url_for('cours', _anchor=None) }}?niveau={{ niveau }}#{{ s.code }}">
+      <span class="matiere-ico">{{ s.icone }}</span>
+      <h3>{{ s.nom }}</h3>
+      <p>{{ counts.get((s['id'], niveau), 0) }} chapitres ·
+         {{ ex_counts.get((s['id'], niveau), 0) }} exercices</p>
+    </a>
+    {% endfor %}
+  </div>
+
+  <div class="grid2 dash-bottom">
+    <div class="panel">
+      <h3>📝 Reprends tes exercices</h3>
+      <p class="muted">Travaille par niveau de difficulté : basique → moyen → type examen.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="{{ url_for('exercices', difficulte=1) }}">Basique</a>
+        <a class="btn btn-primary" href="{{ url_for('exercices', difficulte=2) }}">Moyen</a>
+        <a class="btn btn-danger" href="{{ url_for('exercices', difficulte=3) }}">Type examen 🔥</a>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>💬 Mes groupes</h3>
+      {% if mes_groupes %}
+        <ul class="mini-list">
+        {% for g in mes_groupes %}
+          <li><a href="{{ url_for('groupe', gid=g['id']) }}">{{ g['nom'] }}</a>
+              <span class="chip">{{ g['membres'] }} membres</span></li>
+        {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">Tu n'as pas encore de groupe.
+        <a href="{{ url_for('communaute') }}">Crée-en un</a> ou rejoins ton lycée.</p>
+      {% endif %}
+      <a class="btn btn-ghost" href="{{ url_for('communaute') }}">Communauté →</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

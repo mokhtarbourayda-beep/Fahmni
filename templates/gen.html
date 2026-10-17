@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Générateur d'exercices — FAHMNI{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="page-head">
+    <div>
+      <h1>🎲 Générateur d'exercices</h1>
+      <p class="muted">Choisis une leçon et un niveau de difficulté : un exercice <b>inédit</b> est
+         créé à la demande, avec sa correction détaillée calculée (toujours juste).</p>
+    </div>
+  </div>
+
+  <div class="panel gen-panel">
+    <div class="gen-form">
+      <label>Matière
+        <select id="gen-matiere">
+          <option value="MATH">📐 Mathématiques</option>
+          <option value="PC">⚗️ Physique-Chimie</option>
+          <option value="SVT">🧬 SVT</option>
+          <option value="FR">📖 Français</option>
+        </select>
+      </label>
+      <label>Leçon
+        <select id="gen-lecon"></select>
+      </label>
+      <label>Difficulté
+        <select id="gen-diff">
+          <option value="">Toutes</option>
+          <option value="1">Basique</option>
+          <option value="2">Moyen</option>
+          <option value="3">Type Examen</option>
+        </select>
+      </label>
+      <label class="check-defi" title="Force un exercice de niveau Type Examen">
+        <input type="checkbox" id="gen-hard">
+        🔥 Exercice difficile
+      </label>
+      <button class="btn btn-primary" id="gen-go" type="button">🎲 Générer un exercice</button>
+    </div>
+  </div>
+
+  <div class="panel gen-card" id="gen-result" hidden>
+    <div class="chapter-top">
+      <span class="chip chip-niveau" id="gen-chip-lecon"></span>
+      <span class="dot-chip" id="gen-chip-diff" style="--dc: #2563eb;"></span>
+      <span class="chip">exercice inédit</span>
+    </div>
+    <p class="gen-enonce prewrap" id="gen-enonce"></p>
+    <div class="gen-actions">
+      <button class="btn btn-ghost" id="gen-correction-btn" type="button">💡 Voir la correction</button>
+      <button class="btn btn-ghost" id="gen-again" type="button">🔄 Nouveau tirage</button>
+      <a class="btn btn-ghost" id="gen-prof" href="#">🤖 Demander au Prof Atlas</a>
+    </div>
+    <div class="gen-correction" id="gen-correction" hidden>
+      <h4>✅ Correction</h4>
+      <p class="prewrap" id="gen-solution"></p>
+      <p class="gen-astuce" id="gen-astuce"></p>
+    </div>
+  </div>
+
+  <p class="muted gen-note" hidden id="gen-empty">Aucun générateur disponible pour cette
+     sélection — essaie une autre leçon.</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  const THEMES = {{ themes | tojson }};
+  const EMOJIS = {MATH: '📐', PC: '⚗️', SVT: '🧬', FR: '📖'};
+  const DIFF_LABEL = {1: "Basique", 2: "Moyen", 3: "Type Examen"};
+  const DIFF_COLOR = {1: "#16a34a", 2: "#d97706", 3: "#dc2626"};
+  const selM = document.getElementById('gen-matiere');
+  const selL = document.getElementById('gen-lecon');
+  const selD = document.getElementById('gen-diff');
+  const hard = document.getElementById('gen-hard');
+  hard.addEventListener('change', function () { selD.disabled = hard.checked; });
+  const btnGo = document.getElementById('gen-go');
+  const card = document.getElementById('gen-result');
+  const empty = document.getElementById('gen-empty');
+  let current = null;
+
+  function fillLecons() {
+    const code = selM.value;
+    selL.innerHTML = '';
+    (THEMES[code] || []).forEach(function (t) {
+      const o = document.createElement('option');
+      o.value = t;
+      o.textContent = t;
+      selL.appendChild(o);
+    });
+  }
+  selM.addEventListener('change', fillLecons);
+  fillLecons();
+
+  async function tirer() {
+    btnGo.disabled = true;
+    btnGo.textContent = '⏳ Génération…';
+    try {
+      const r = await fetch('/api/generateur', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({matiere: selM.value, chapitre: selL.value || '',
+                              difficulte: hard.checked ? '3' : selD.value})
+      });
+      if (!r.ok) throw new Error('ko');
+      current = await r.json();
+      empty.hidden = true;
+      card.hidden = false;
+      document.getElementById('gen-chip-lecon').textContent =
+        (EMOJIS[selM.value] || '') + ' ' + current.chapitre;
+      const chip = document.getElementById('gen-chip-diff');
+      chip.textContent = DIFF_LABEL[current.difficulte] || 'Exercice';
+      chip.style.setProperty('--dc', DIFF_COLOR[current.difficulte] || '#2563eb');
+      document.getElementById('gen-enonce').textContent = current.enonce;
+      document.getElementById('gen-solution').textContent = current.solution;
+      document.getElementById('gen-astuce').textContent =
+        current.astuce ? '💡 Astuce : ' + current.astuce : '';
+      document.getElementById('gen-correction').hidden = true;
+      document.getElementById('gen-correction-btn').textContent = '💡 Voir la correction';
+      document.getElementById('gen-prof').href =
+        '/prof?question=' + encodeURIComponent('Aide-moi à résoudre cet exercice pas à pas : '
+                                               + current.enonce);
+      card.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    } catch (e) {
+      card.hidden = true;
+      empty.hidden = false;
+    } finally {
+      btnGo.disabled = false;
+      btnGo.textContent = '🎲 Générer un exercice';
+    }
+  }
+
+  btnGo.addEventListener('click', tirer);
+  document.getElementById('gen-again').addEventListener('click', tirer);
+  document.getElementById('gen-correction-btn').addEventListener('click', function () {
+    const c = document.getElementById('gen-correction');
+    c.hidden = !c.hidden;
+    this.textContent = c.hidden ? '💡 Voir la correction' : '🙈 Masquer la correction';
+    if (!c.hidden) c.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+  });
+})();
+</script>
+{% endblock %}

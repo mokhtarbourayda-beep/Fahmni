@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}{{ gr['nom'] }} — FAHMNI{% endblock %}
+{% block content %}
+<div class="container page group-page">
+  <a class="back" href="{{ url_for('communaute') }}">← Communauté</a>
+  <div class="page-head">
+    <div>
+      <h1>💬 {{ gr['nom'] }}</h1>
+      <p class="muted">{{ gr['description'] or 'Groupe de travail' }}
+        {% if gr['lycee_nom'] %} · 🏫 {{ gr['lycee_nom'] }}{% endif %}</p>
+    </div>
+    <div class="invite-box">
+      <span class="muted small">Code d'invitation à partager :</span>
+      <code class="invite-code">{{ gr['code'] }}</code>
+      <button class="btn btn-ghost btn-sm" onclick="copyCode('{{ gr['code'] }}')">Copier</button>
+    </div>
+  </div>
+
+  <div class="chatbox panel" id="chatbox">
+    {% if messages %}
+      {% for m in messages %}
+      <div class="gmsg {% if m['user_id'] == current_user()['id'] %}mine{% endif %}">
+        <div class="gmsg-avatar" style="background: {{ m['couleur'] }}">{{ m['prenom'][0]|upper }}</div>
+        <div class="gmsg-body">
+          <div class="gmsg-meta"><b>{{ m['prenom'] }} {{ m['nom'][0] }}.</b>
+            <small class="muted">{{ m['created_at'][11:16] }}</small></div>
+          <div class="gmsg-text prewrap">{{ m['content'] }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="gmsg">
+        <div class="gmsg-avatar" style="background:#2a9d8f">F</div>
+        <div class="gmsg-body">
+          <div class="gmsg-meta"><b>Fahmni</b></div>
+          <div class="gmsg-text">Bienvenue dans le groupe ! Partagez vos difficultés,
+          vos exercices, organisez vos révisions 📚</div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <form class="chat-input" id="group-form">
+    <input id="group-text" autocomplete="off" maxlength="1000" placeholder="Écrire un message…">
+    <button class="btn btn-gold" type="submit">Envoyer ➤</button>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const GID = {{ gr['id'] }};
+const MY_ID = {{ current_user()['id'] }};
+const box = document.getElementById('chatbox');
+const form = document.getElementById('group-form');
+const input = document.getElementById('group-text');
+let lastId = 0;
+
+// dernier id affiché côté serveur
+box.querySelectorAll('.gmsg:not(.mine)').forEach(() => {});
+{% set last = messages|length %}
+{% if messages %} lastId = {{ messages[-1]['id'] }}; {% endif %}
+
+function scrollBottom(){ box.scrollTop = box.scrollHeight; }
+scrollBottom();
+
+function addMessage(m) {
+  const d = document.createElement('div');
+  d.className = 'gmsg' + (m.user_id === MY_ID ? ' mine' : '');
+  const av = document.createElement('div');
+  av.className = 'gmsg-avatar';
+  av.textContent = m.prenom[0].toUpperCase();
+  const body = document.createElement('div');
+  body.className = 'gmsg-body';
+  const meta = document.createElement('div');
+  meta.className = 'gmsg-meta';
+  meta.innerHTML = '<b></b> <small class="muted"></small>';
+  meta.querySelector('b').textContent = m.prenom + ' ' + m.nom[0] + '.';
+  meta.querySelector('small').textContent = m.created_at.slice(11, 16);
+  const text = document.createElement('div');
+  text.className = 'gmsg-text prewrap';
+  text.textContent = m.content;      // sécurité : jamais d'HTML brut
+  body.appendChild(meta); body.appendChild(text);
+  d.appendChild(av); d.appendChild(body);
+  box.appendChild(d);
+  scrollBottom();
+}
+
+async function poll() {
+  try {
+    const res = await fetch(`/api/groupe/${GID}/messages?after=${lastId}`);
+    if (res.ok) {
+      const msgs = await res.json();
+      msgs.forEach(m => { if (m.user_id !== MY_ID) addMessage(m); lastId = m.id; });
+    }
+  } catch (e) { /* silencieux */ }
+}
+setInterval(poll, 3000);
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const content = input.value.trim();
+  if (!content) return;
+  input.value = '';
+  const res = await fetch(`/api/groupe/${GID}/envoyer`, {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({content})
+  });
+  if (res.ok) {
+    const data = await res.json();
+    addMessage({id: data.id, content, user_id: MY_ID, prenom: '{{ current_user()["prenom"] }}',
+                nom: '{{ current_user()["nom"] }}', created_at: new Date().toISOString().slice(0,19).replace('T',' ')});
+    lastId = Math.max(lastId, data.id);
+  }
+});
+
+function copyCode(c) { navigator.clipboard.writeText(c); }
+</script>
+{% endblock %}

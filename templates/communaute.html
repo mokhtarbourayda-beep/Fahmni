@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Communauté — FAHMNI{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="page-head">
+    <div>
+      <h1>💬 Communauté</h1>
+      <p class="muted">Groupes de révision, entraide entre élèves — crée le tien en 10 secondes.</p>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3>➕ Créer un groupe</h3>
+      <form method="post" action="{{ url_for('creer_groupe') }}" class="form">
+        <div class="form-group">
+          <label>Nom du groupe</label>
+          <input name="nom" required minlength="3" maxlength="50"
+                 placeholder="ex : 1BAC SE A — Révisions Maths">
+        </div>
+        <div class="form-group">
+          <label>Description <small>(facultatif)</small></label>
+          <input name="description" maxlength="200"
+                 placeholder="ex : on révise les suites chaque soir à 20h">
+        </div>
+        <div class="form-group">
+          <label>Visibilité</label>
+          <select name="scope">
+            <option value="">🌍 Ouvert à tous les lycées</option>
+            <option value="lycee">🏫 Réservé à mon lycée</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Créer le groupe</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h3>🔑 Rejoindre avec un code</h3>
+      <p class="muted">Un camarade t'a partagé son code d'invitation (6 caractères) ?</p>
+      <form method="post" action="{{ url_for('rejoindre_groupe') }}" class="form form-inline">
+        <input name="code" required maxlength="6" minlength="6"
+               placeholder="CODE 6 lettres/chiffres" style="text-transform: uppercase">
+        <button class="btn btn-gold" type="submit">Rejoindre</button>
+      </form>
+    </div>
+  </div>
+
+  <h2 class="section-title">Tous les groupes</h2>
+  <div class="grid3">
+    {% for g in groupes %}
+    <div class="group-card">
+      <div class="group-top">
+        <h3>💬 {{ g['nom'] }}</h3>
+        {% if g['lycee_nom'] %}<span class="chip chip-niveau">🏫 {{ g['lycee_nom'] }}</span>{% endif %}
+      </div>
+      <p class="muted">{{ g['description'] or 'Groupe de travail' }}</p>
+      <div class="group-foot">
+        <span class="chip">{{ g['membres'] }} membres</span>
+        {% if g['membre'] %}
+          <a class="btn btn-primary btn-sm" href="{{ url_for('groupe', gid=g['id']) }}">Ouvrir</a>
+          <form method="post" action="{{ url_for('quitter_groupe', gid=g['id']) }}" class="inline">
+            <button class="btn-link" type="submit">quitter</button>
+          </form>
+        {% else %}
+          <a class="btn btn-ghost btn-sm" href="{{ url_for('communaute') }}">Code requis 🔒</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

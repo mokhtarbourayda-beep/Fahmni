@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Exercices — FAHMNI{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  const selM = document.querySelector('select[name="matiere"]');
+  const selC = document.querySelector('#sel-chapitre');
+  if (!selM || !selC) return;
+  function syncGroups() {
+    const code = selM.value;
+    selC.querySelectorAll('optgroup').forEach(function (g) {
+      g.style.display = (!code || g.dataset.code === code) ? '' : 'none';
+    });
+    selC.querySelectorAll('option[value]').forEach(function (o) {
+      const g = o.parentElement;
+      o.hidden = !!code && g.dataset.code !== code;
+    });
+    if (code && selC.selectedOptions[0] && selC.selectedOptions[0].hidden) selC.value = '';
+  }
+  selM.addEventListener('change', function () {
+    if (selC.value) selC.value = '';   // changement de matière → réinitialise la leçon
+    syncGroups();
+  });
+  syncGroups();
+})();
+</script>
+{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="page-head">
+    <div>
+      <h1>📝 Exercices corrigés</h1>
+      <p class="muted">Du basique au type Examen National — corrections détaillées et astuces.</p>
+    </div>
+  </div>
+
+  <form class="filters panel" method="get">
+    <label>Matière
+      <select name="matiere">
+        <option value="">Toutes</option>
+        {% for s in subjects %}
+        <option value="{{ s['code'] }}" {% if f_matiere == s['code'] %}selected{% endif %}>
+          {{ s.icone }} {{ s.nom }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Leçon
+      <select name="chapitre" id="sel-chapitre">
+        <option value="">Toutes les leçons</option>
+        {% for s in subjects %}
+        {% set chs = chapitres | selectattr('code', 'equalto', s['code']) | list %}
+        {% if chs %}
+        <optgroup label="{{ s.icone }} {{ s.nom }}" data-code="{{ s['code'] }}">
+          {% for ch in chs %}
+          <option value="{{ ch['id'] }}" {% if f_chapitre == ch['id'] %}selected{% endif %}>
+            S{{ ch['semestre'] or 1 }} · {{ ch['titre'] }}</option>
+          {% endfor %}
+        </optgroup>
+        {% endif %}
+        {% endfor %}
+      </select>
+    </label>
+    <label>Difficulté
+      <select name="difficulte">
+        <option value="">Toutes</option>
+        {% for d, lab in DIFF_LABEL.items() %}
+        <option value="{{ d }}" {% if f_diff == d %}selected{% endif %}>{{ lab }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label class="check-defi" title="Uniquement les exercices de niveau difficile / type examen">
+      <input type="checkbox" name="difficile" value="1" {% if f_difficile %}checked{% endif %}>
+      🔥 Exercices difficiles
+    </label>
+    <button class="btn btn-primary" type="submit">Filtrer</button>
+    <a class="btn btn-ghost" href="{{ url_for('exercices') }}">Réinitialiser</a>
+  </form>
+
+  <p class="muted">{{ exos|length }} exercice(s) trouvé(s)</p>
+
+  <div class="ex-list">
+    {% for e in exos %}
+    <a class="exercise-card" href="{{ url_for('exercice', eid=e['id']) }}">
+      <div class="exercise-top">
+        <span class="chip">{{ e.icone }} {{ e.chapitre }}</span>
+        <span class="chip chip-niveau">{{ NIVEAU_LABEL[e['niveau']] }}</span>
+        <span class="dot-chip" style="--dc: {{ DIFF_COLOR[e['difficulte']] }}">
+          {{ DIFF_LABEL[e['difficulte']] }}</span>
+        <span class="chip chip-source">{{ e['source'] }}</span>
+      </div>
+      <p class="exercise-enonce prewrap">{{ e['enonce'][:180] }}{% if e['enonce']|length > 180 %}…{% endif %}</p>
+      <span class="exercise-open">Ouvrir & corriger →</span>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

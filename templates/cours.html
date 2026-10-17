@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Cours — FAHMNI{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="page-head">
+    <div>
+      <h1>📚 Cours & leçons</h1>
+      <p class="muted">Chaque notion expliquée avec plusieurs méthodes : intuitive, formelle, exemple.</p>
+    </div>
+    <div class="tabs">
+      <a class="tab {% if niveau == 'TC' %}active{% endif %}" href="{{ url_for('cours', niveau='TC') }}">Tronc Commun</a>
+      <a class="tab {% if niveau == '1BAC' %}active{% endif %}" href="{{ url_for('cours', niveau='1BAC') }}">1ère Bac</a>
+    </div>
+  </div>
+
+  {% for s in subjects %}
+    {% if par_matiere[s['code']] %}
+    <section class="subject-block" id="{{ s['code'] }}">
+      <h2 class="subject-title" style="--mc: {{ s.couleur }}">{{ s.icone }} {{ s.nom }}</h2>
+      {% for sem, label in [(1, '1er semestre'), (2, '2ᵉ semestre')] %}
+        {% set chapitres = par_matiere[s['code']][sem] %}
+        {% if chapitres %}
+        <div class="semestre-head">
+          <span class="semestre-badge">{{ sem }}</span> {{ label }}
+        </div>
+        <div class="grid3">
+          {% for c in chapitres %}
+          <a class="chapter-card" href="{{ url_for('chapitre', cid=c['id']) }}">
+            <div class="chapter-top">
+              <span class="chip chip-niveau">S{{ c['semestre'] or 1 }}</span>
+              <span class="chip">{{ c['n_ex'] }} exercices</span>
+            </div>
+            <h3>{{ c['titre'] }}</h3>
+            <p>{{ c['resume'][:110] }}{% if c['resume']|length > 110 %}…{% endif %}</p>
+            <span class="chapter-open">Ouvrir la leçon →</span>
+          </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+      {% endfor %}
+    </section>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}

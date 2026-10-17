@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Connexion — FAHMNI{% endblock %}
+{% block content %}
+<div class="auth-wrap container">
+  <div class="auth-card">
+    <h1>Connexion</h1>
+    <p class="auth-sub">Bon retour ! Prêt à progresser aujourd'hui ?</p>
+
+    {% for e in erreurs %}
+      <div class="alert alert-error">{{ e }}</div>
+    {% endfor %}
+
+    <form method="post" class="form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required placeholder="ton@email.ma">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" name="motdepasse" required placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary btn-lg btn-block" type="submit">Se connecter</button>
+    </form>
+
+    {% if demo_email %}
+    <form method="post" class="demo-box">
+      <input type="hidden" name="email" value="{{ demo_email }}">
+      <input type="hidden" name="motdepasse" value="demo1234">
+      <button class="btn btn-ghost btn-block" type="submit">👀 Essayer avec le compte démo ({{ demo_email }})</button>
+    </form>
+    {% endif %}
+
+    <p class="auth-alt">Pas encore de compte ? <a href="{{ url_for('inscription') }}">Inscription gratuite</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Annuaire des lycées — FAHMNI{% endblock %}
+{% block content %}
+<div class="container page">
+  <div class="page-head">
+    <div>
+      <h1>🏫 Annuaire des lycées</h1>
+      <p class="muted">Trouve ton établissement, ta classe, tes camarades.</p>
+    </div>
+  </div>
+
+  <div class="filters panel">
+    <span class="muted small">Villes :</span>
+    <a class="chip chip-btn {% if not f_ville %}chip-active{% endif %}" href="{{ url_for('annuaire') }}">Toutes</a>
+    {% for v in villes %}
+    <a class="chip chip-btn {% if f_ville == v %}chip-active{% endif %}"
+       href="{{ url_for('annuaire', ville=v) }}">{{ v }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="grid3">
+    {% for l in lycees %}
+    <a class="lycee-card" href="{{ url_for('lycee', lid=l['id']) }}">
+      <div class="lycee-head">
+        <span class="lycee-badge">🏫</span>
+        <div>
+          <h3>{{ l['nom'] }}</h3>
+          <p class="muted">{{ l['ville'] }} · {{ l['type'] }}</p>
+        </div>
+      </div>
+      <div class="lycee-stats">
+        <span><b>{{ l['n_classes'] }}</b> classes</span>
+        <span><b>{{ l['n_eleves'] }}</b> élèves Fahmni</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

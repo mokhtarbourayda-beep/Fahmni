@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Inscription — FAHMNI{% endblock %}
+{% block content %}
+<div class="auth-wrap container">
+  <div class="auth-card">
+    <h1>Créer mon compte</h1>
+    <p class="auth-sub">Gratuit — choisis ton lycée pour retrouver tes camarades.</p>
+
+    {% for e in erreurs %}
+      <div class="alert alert-error">{{ e }}</div>
+    {% endfor %}
+
+    <form method="post" class="form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Prénom</label>
+          <input name="prenom" required value="{{ form.get('prenom','') }}" placeholder="Yassine">
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input name="nom" required value="{{ form.get('nom','') }}" placeholder="El Amrani">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required value="{{ form.get('email','') }}" placeholder="yassine@exemple.ma">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe <small>(6 caractères minimum)</small></label>
+        <input type="password" name="motdepasse" required minlength="6" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>Ton lycée</label>
+        <select id="select-lycee" name="lycee_id" required>
+          <option value="">— Choisir un lycée —</option>
+          {% for l in lycees %}
+          <option value="{{ l['id'] }}" {% if form.get('lycee_id')|string == l['id']|string %}selected{% endif %}>
+            {{ l['nom'] }} — {{ l['ville'] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Ta classe</label>
+        <select id="select-classe" name="classe_id" required disabled>
+          <option value="">— Choisis d'abord un lycée —</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-lg btn-block" type="submit">Je m'inscris 🎓</button>
+    </form>
+    <p class="auth-alt">Déjà inscrit ? <a href="{{ url_for('connexion') }}">Connexion</a></p>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const selL = document.getElementById('select-lycee');
+const selC = document.getElementById('select-classe');
+selL.addEventListener('change', async () => {
+  selC.disabled = !selL.value;
+  selC.innerHTML = '<option value="">Chargement…</option>';
+  if (!selL.value) { selC.innerHTML = '<option value="">— Choisis d\'abord un lycée —</option>'; return; }
+  const res = await fetch('/api/classes?lycee_id=' + selL.value);
+  const classes = await res.json();
+  selC.innerHTML = '<option value="">— Choisir ma classe —</option>' +
+    classes.map(c => `<option value="${c.id}">${c.nom}</option>`).join('');
+});
+</script>
+{% endblock %}

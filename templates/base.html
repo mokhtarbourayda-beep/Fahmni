@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}FAHMNI — Le lycée devient plus simple{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+<header class="topbar">
+  <div class="container topbar-in">
+    <a class="brand" href="{{ url_for('landing') }}">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+        <path d="M12 3 2 8l10 5 8-4v5h2V8L12 3z" fill="#e9c46a"/>
+        <path d="M6 11.5v4c0 1.5 2.7 3 6 3s6-1.5 6-3v-4l-6 3-6-3z" fill="#fff"/>
+      </svg>
+      <span class="brand-name">FAHMNI <small>فهمني</small></span>
+    </a>
+    <nav class="nav">
+      {% if current_user() %}
+        <a href="{{ url_for('cours') }}">Cours</a>
+        <a href="{{ url_for('exercices') }}">Exercices</a>
+        <a href="{{ url_for('generateur') }}">🎲 Générateur</a>
+        <a href="{{ url_for('prof') }}" class="nav-prof">Prof Atlas 🤖</a>
+        <a href="{{ url_for('annuaire') }}">Annuaire</a>
+        <a href="{{ url_for('communaute') }}">Communauté</a>
+        <a class="avatar" href="{{ url_for('profil') }}" title="Mon profil"
+           style="background: {{ current_user()['couleur'] }}">
+          {{ current_user()['prenom'][0]|upper }}</a>
+      {% else %}
+        <a href="/#matieres">Matières</a>
+        <a href="/#fonctions">Fonctionnalités</a>
+        <a class="btn btn-ghost" href="{{ url_for('connexion') }}">Connexion</a>
+        <a class="btn btn-gold" href="{{ url_for('inscription') }}">S'inscrire</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <div class="container footer-in">
+    <div>
+      <strong>FAHMNI</strong> — Plateforme éducative marocaine 🇲🇦<br>
+      <small>Maths · Physique-Chimie · SVT · Français — Tronc Commun & 1ère Bac</small>
+    </div>
+    <div class="footer-note">
+      <small>Conforme au programme du Ministère de l'Éducation Nationale<br>
+      © {{ now }} Fahmni — Fait avec ❤️ pour les lycéens</small>
+    </div>
+  </div>
+</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

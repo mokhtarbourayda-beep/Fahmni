@@ -1,0 +1,454 @@
+{% extends "base.html" %}
+{% block title %}Prof Atlas — FAHMNI{% endblock %}
+{% block content %}
+<div class="prof-app">
+
+  <!-- ═══════════ BARRE DE COMMANDE DU PROF (en haut) ═══════════ -->
+  <header class="prof-topbar">
+    <div class="prof-identity">
+      <div class="prof-avatar" id="profAvatar">👨‍🏫<span class="status-dot"></span></div>
+      <div class="prof-id-text">
+        <div class="prof-name">Prof Atlas
+          {% if live %}<span class="live-badge">● EN DIRECT</span>
+          {% else %}<span class="demo-badge">● MODE DÉMO</span>{% endif %}
+        </div>
+        <div class="prof-state" id="profState">Prêt à t'aider</div>
+        <div class="prof-progress" id="profProgress"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="prof-hint">
+    💡 Il explique <b>étape par étape</b>, avec des pauses. <b>Interromps-le quand tu veux</b> :
+    clique ⏹ ou 🎤 et dis <b>« clarifie l'étape 2 »</b>, <b>« plus simple »</b>, <b>« continue »</b>…
+  </div>
+
+  <!-- ═══════════ AU TABLEAU ═══════════ -->
+  <div class="chalkboard" id="chalkboard" hidden>
+    <div class="chalk-label">📋 Au tableau</div>
+    <div class="chalk-text" id="chalkText"></div>
+  </div>
+
+  <!-- ═══════════ CARTE DE CHAT ═══════════ -->
+  <section class="chat-card">
+
+    <!-- barre d'action unifiée AU-DESSUS du chat -->
+    <div class="chat-toolbar">
+      <button class="act-btn act-voice" id="soundToggle" title="Activer / couper la voix">🔊 Voix : ON</button>
+      <button class="act-btn act-stop standby" id="stopBtn" title="Interrompre la voix du prof">⏹ Interrompre</button>
+      <button class="act-btn act-continue standby" id="continueBtn" title="Reprendre l'explication en pause">▶️ Continuer la lecture</button>
+    </div>
+
+    <!-- messages -->
+    <div class="chatbox" id="chatbox">
+      <div class="msg prof">
+        <b>Prof Atlas</b>
+        <div class="msg-body">👋 Salam ! Pose ta question <b>à la voix</b> 🎤 ou au clavier.<br>
+        Je t'explique <b>étape par étape</b> — et tu peux m'interrompre à tout moment :
+        « clarifie l'étape 2 », « plus simple », « un exemple », « continue »…</div>
+      </div>
+    </div>
+
+    <!-- suggestions -->
+    <div class="quick-asks">
+      <button class="chip chip-btn" data-q="résoudre x^2 - 5x + 6 = 0">résoudre x² − 5x + 6 = 0</button>
+      <button class="chip chip-btn" data-q="résoudre cos x = √3/2">cos x = √3/2</button>
+      <button class="chip chip-btn" data-q="dérivée de 3x^3 - 2x + 5">dérivée de 3x³ − 2x + 5</button>
+      <button class="chip chip-btn" data-q="explique-moi la mole">🧪 la mole</button>
+      <button class="chip chip-btn" data-q="explique les suites numériques">🔢 les suites</button>
+      <button class="chip chip-btn" data-q="explique la génétique">🧬 génétique</button>
+    </div>
+
+    <!-- zone de saisie -->
+    <form class="chat-input" id="chat-form">
+      <button type="button" class="mic-btn" id="micBtn"
+              title="Parler au Prof (ou cliquer pendant qu'il parle pour l'interrompre)">🎤</button>
+      <input id="chat-text" autocomplete="off" maxlength="1000"
+             placeholder="Écris ta question… ou clique sur 🎤 pour parler">
+      <button class="send-btn" type="submit">Envoyer ➤</button>
+    </form>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+/* ================= éléments ================= */
+const box = document.getElementById('chatbox');
+const form = document.getElementById('chat-form');
+const input = document.getElementById('chat-text');
+const micBtn = document.getElementById('micBtn');
+const stopBtn = document.getElementById('stopBtn');
+const continueBtn = document.getElementById('continueBtn');
+const profAvatar = document.getElementById('profAvatar');
+const profState = document.getElementById('profState');
+const profProgress = document.getElementById('profProgress');
+const soundToggle = document.getElementById('soundToggle');
+const chalkboard = document.getElementById('chalkboard');
+const chalkText = document.getElementById('chalkText');
+
+let soundOn = ('speechSynthesis' in window) || true;
+let serverTTS = true;      // bascule automatiquement si l'API vocale n'existe pas
+let session = 0;           // session de parole en cours (pour tout annuler proprement)
+let speakingNow = false;
+
+let PUBLIC_URL = '';
+fetch('/api/public_url').then(r => r.json()).then(d => {
+  PUBLIC_URL = (d.url || '').replace(/\/$/, '');
+}).catch(() => {});
+
+/* ================= état du prof ================= */
+function setState(txt, cls) {
+  profState.textContent = txt;
+  profAvatar.className = 'prof-avatar' + (cls ? ' ' + cls : '');
+}
+function setProgress(txt) {
+  profProgress.textContent = txt || '';
+}
+
+/* ================= synthèse ================= */
+function cleanForSpeech(t) {
+  return t.replace(/\*\*/g, '')
+          .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{FE0F}]/gu, ' ')
+          .replace(/\s+/g, ' ').trim();
+}
+
+let frVoice = null;
+if ('speechSynthesis' in window) {
+  const pick = () => { frVoice = speechSynthesis.getVoices().find(v => (v.lang||'').toLowerCase().startsWith('fr')) || null; };
+  pick(); speechSynthesis.onvoiceschanged = pick;
+} else {
+  soundOn = false;
+}
+
+function playBrowserTTS(text, mySession) {
+  return new Promise((resolve) => {
+    if (!soundOn || !('speechSynthesis' in window)) return resolve();
+    const u = new SpeechSynthesisUtterance(cleanForSpeech(text));
+    if (frVoice) u.voice = frVoice;
+    u.lang = 'fr-FR'; u.rate = 1.0;
+    const done = () => { if (mySession === session) resolve(); };
+    u.onend = done; u.onerror = done;
+    speechSynthesis.speak(u);
+    // sécurité : ne jamais rester bloquée
+    setTimeout(done, Math.min(45000, 2500 + text.length * 90));
+  });
+}
+
+async function playServerTTS(text, mySession) {
+  const res = await fetch('/api/tts', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text})
+  });
+  if (res.status === 501) { serverTTS = false; return playBrowserTTS(text, mySession); }
+  if (!res.ok) throw new Error('tts');
+  const blob = await res.blob();
+  return new Promise((resolve) => {
+    if (mySession !== session) return resolve();
+    const a = new Audio(URL.createObjectURL(blob));
+    window.__curAudio = a;
+    a.onended = () => resolve();
+    a.onerror = () => resolve();
+    a.play().catch(() => resolve());
+  });
+}
+
+async function speak(text, mySession) {
+  if (mySession !== session) return;
+  if (!serverTTS) return playBrowserTTS(text, mySession);
+  try { return await playServerTTS(text, mySession); }
+  catch (e) { serverTTS = false; return playBrowserTTS(text, mySession); }
+}
+
+function stopSpeaking() {
+  session++;
+  speakingNow = false;
+  stopBtn.classList.add('standby');
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  if (window.__curAudio) { try { window.__curAudio.pause(); } catch (e) {} window.__curAudio = null; }
+  document.querySelectorAll('.step.speaking').forEach(el => el.classList.remove('speaking'));
+  chalkboard.hidden = true;
+  setState("Prêt à t'aider");
+  setProgress('');
+}
+stopBtn.addEventListener('click', () => {
+  if (stopBtn.classList.contains('standby')) return;
+  stopSpeaking();
+});
+
+/* ================= rendu des réponses en étapes ================= */
+function isStepLine(ln) {
+  return /^\s*(Étape\s*\d|[0-9]+\)|▶️|💡|⚠️)/.test(ln);
+}
+function addMsg(cls) {
+  const d = document.createElement('div');
+  d.className = 'msg ' + cls;
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+  return d;
+}
+function mdToHtml(t) {
+  // échappe TOUT d'abord (sécurité), puis transforme le markdown de façon contrôlée
+  let s = t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  s = s.replace(/\\[\(\)]|\$\$?/g, '');                 // délimiteurs LaTeX
+  s = s.replace(/\\times/g, '×').replace(/\\Delta/g, 'Δ')
+       .replace(/\\leq/g, '≤').replace(/\\geq/g, '≥')
+       .replace(/\\sqrt/g, '√').replace(/\\infty/g, '∞')
+       .replace(/\\pi/g, 'π').replace(/\\neq/g, '≠')
+       .replace(/\\rightarrow/g, '→').replace(/\\Rightarrow/g, '⇒')
+       .replace(/\\in /g, ' ∈ ').replace(/\\forall/g, '∀');
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+  s = s.replace(/\*([^*\n]+)\*/g, '<i>$1</i>');
+  s = s.replace(/^#{1,6}\s*(.+)$/gm, '<h4>$1</h4>');
+  return s;
+}
+
+function mdToPlain(t) {
+  return t.replace(/\\[\(\)]|\$\$?/g, '')
+          .replace(/\*\*([^*]+)\*\*/g, '$1').replace(/^#{1,6}\s*/gm, '')
+          .replace(/\\times/g, '×').replace(/\\Delta/g, 'Δ')
+          .replace(/\\leq/g, '≤').replace(/\\geq/g, '≥')
+          .replace(/\\sqrt/g, '√').replace(/\\infty/g, '∞')
+          .replace(/\\pi/g, 'π').replace(/\\neq/g, '≠')
+          .replace(/\\rightarrow/g, '→').replace(/\\Rightarrow/g, '⇒')
+          .replace(/\\in /g, ' ∈ ').replace(/\\forall/g, '∀').trim();
+}
+
+function renderAnswer(text) {
+  const pending = addMsg('prof');
+  pending.innerHTML = '<b>Prof Atlas</b>';
+  const body = document.createElement('div');
+  body.className = 'msg-body';
+  const lines = mdToPlain(text).split('\n');
+  const chunks = [];   // {el, text}
+  let curText = [];
+  const flush = () => {
+    if (!curText.length) return;
+    const el = document.createElement('div');
+    el.className = 'step';
+    el.textContent = curText.join(' ').trim();
+    body.appendChild(el);
+    chunks.push({el, text: curText.join(' ').trim()});
+    curText = [];
+  };
+  let inTable = false;
+  for (const ln of lines) {
+    const t = ln.trim();
+    if (!t) { continue; }
+    if (t.startsWith('|')) {
+      if (/^\|[\s:|-]+\|$/.test(t)) continue;   // ligne de séparation du tableau
+      flush();
+      const cells = t.split('|').slice(1, -1).map(c => c.trim());
+      let el;
+      if (!inTable) {
+        el = document.createElement('div');
+        el.className = 'step table-row table-head';
+        el.textContent = cells.join('  ·  ');
+        inTable = true;
+      } else {
+        el = document.createElement('div');
+        el.className = 'step table-row';
+        el.textContent = cells.join('  ·  ');
+      }
+      body.appendChild(el);
+      chunks.push({el, text: el.textContent});
+      continue;
+    }
+    inTable = false;
+    if (isStepLine(t) || t.startsWith('#')) {
+      flush();
+      const el = document.createElement('div');
+      el.className = 'step';
+      if (t.startsWith('#')) {
+        el.classList.add('step-title');
+        el.textContent = t.replace(/^#+\s*/, '');
+      } else {
+        el.textContent = t;
+      }
+      body.appendChild(el);
+      chunks.push({el, text: el.textContent});
+    } else {
+      curText.push(t);
+      if (curText.length >= 2) flush();
+    }
+  }
+  flush();
+  pending.appendChild(body);
+  box.scrollTop = box.scrollHeight;
+  return {el: pending, chunks};
+}
+
+/* ================= lecture guidée (le prof « enseigne ») ================= */
+const SPEAK_BUDGET = 340;   // caractères par séquence, puis pause pédagogique
+let resumeChunks = null;    // étapes restantes après une pause (pour « Continuer la lecture »)
+let lastChunks = null;      // dernière réponse complète (pour relire)
+
+async function teachAnswer(chunks, answerText) {
+  const mySession = ++session;
+  speakingNow = true;
+  stopBtn.classList.remove('standby');
+  continueBtn.classList.add('standby');
+  let spoken = 0, i = 0;
+  const total = chunks.length;
+
+  while (i < chunks.length && mySession === session) {
+    const c = chunks[i];
+    c.el.classList.add('speaking');
+    c.el.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    chalkboard.hidden = false;
+    chalkText.textContent = c.text;
+    setState('🔊 J\'explique… écoute bien', 'speaking');
+    setProgress(`Étape ${i + 1} / ${total}`);
+    await speak(c.text, mySession);
+    if (mySession !== session) return;   // interrompu
+    c.el.classList.remove('speaking');
+    c.el.classList.add('done');
+    spoken += c.text.length;
+    i++;
+    if (spoken >= SPEAK_BUDGET && i < chunks.length) {
+      // pause pédagogique : le prof s'arrête et laisse la parole à l'élève
+      chalkText.textContent = '⏸️ Pause — à toi !';
+      setState('⏸️ Une question ? Interromps-moi !', 'paused');
+      setProgress(`Étape ${i} / ${total} — en pause`);
+      await speak('Voilà le début de mon explication. Dis « continue » pour la suite, ' +
+                  'ou interromps-moi pour clarifier une étape.', mySession);
+      if (mySession !== session) return;
+      resumeChunks = chunks.slice(i);      // la suite est mémorisée, prête à reprendre
+      stopBtn.classList.add('standby');
+      speakingNow = false;
+      continueBtn.classList.remove('standby');
+      chalkboard.hidden = true;
+      setState('En pause — dis « continue » ou pose ta question', 'paused');
+      return;
+    }
+  }
+  if (mySession === session) {
+    speakingNow = false;
+    stopBtn.classList.add('standby');
+    chalkboard.hidden = true;
+    setState('Prêt à t\'aider — une question ?');
+    setProgress('');
+  }
+}
+
+/* ================= envoi d'une question ================= */
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const q = input.value.trim();
+  if (!q) return;
+  if (/^(continue|continuer|la suite|reprends?)\b/i.test(q) && resumeChunks) {
+    input.value = '';
+    const userR = addMsg('user prewrap');
+    userR.textContent = q;
+    resumeTeaching();
+    return;
+  }
+  resumeChunks = null;                    // nouvelle vraie question → la pause est oubliée
+  stopSpeaking();                       // interrompre le prof = simplement lui parler
+  const user = addMsg('user prewrap');
+  user.textContent = q;
+  input.value = '';
+  const pending = addMsg('prof typing');
+  pending.innerHTML = '<b>Prof Atlas</b>';
+  const pbody = document.createElement('div');
+  pbody.className = 'msg-body';
+  pbody.textContent = 'réfléchit…';
+  pending.appendChild(pbody);
+  setState('💭 Réfléchit…', 'thinking');
+  continueBtn.classList.add('standby');
+  try {
+    const res = await fetch('/api/prof', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question: q})
+    });
+    const data = await res.json();
+    pending.remove();
+    const {chunks} = renderAnswer(data.answer || data.error);
+    lastChunks = chunks;                 // mémorisée pour « Continuer la lecture »
+    box.scrollTop = box.scrollHeight;
+    teachAnswer(chunks, data.answer);
+  } catch (err) {
+    pending.classList.remove('typing');
+    pbody.textContent = '⚠️ Connexion interrompue. Réessaie.';
+    setState("Prêt à t'aider");
+  }
+});
+
+function resumeTeaching() {
+  if (resumeChunks && resumeChunks.length) {
+    const chunks = resumeChunks;
+    resumeChunks = null;
+    teachAnswer(chunks);                   // reprend exactement où le prof s'était arrêté
+    return;
+  }
+  if (lastChunks && lastChunks.length) {   // pas de pause en cours → on relit la réponse
+    teachAnswer(lastChunks.map(c => ({el: c.el, text: c.text})));
+    return;
+  }
+  setState("Pose-moi d'abord une question 🙂");
+}
+continueBtn.addEventListener('click', () => {
+  if (continueBtn.classList.contains('standby')) return;
+  const user = addMsg('user prewrap');
+  user.textContent = 'continue';
+  resumeTeaching();
+});
+
+/* ================= micro ================= */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recog = null;
+if (SR) {
+  recog = new SR();
+  recog.lang = 'fr-FR';
+  recog.interimResults = true;
+  recog.continuous = false;
+  recog.onresult = (e) => {
+    let txt = '';
+    for (const r of e.results) txt += r[0].transcript;
+    input.value = txt;
+  };
+  recog.onerror = (e) => {
+    micBtn.classList.remove('listening');
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') setState("🎤 Micro bloqué — autorise-le dans ton navigateur");
+    else if (e.error === 'no-speech') setState("Je n'ai rien entendu — réessaie 🎤");
+    else setState("Prêt à t'aider");
+  };
+  recog.onend = () => {
+    micBtn.classList.remove('listening');
+    if (profState.textContent.startsWith('🎤')) setState("Prêt à t'aider");
+    if (input.value.trim()) form.dispatchEvent(new Event('submit'));
+  };
+}
+
+micBtn.addEventListener('click', () => {
+  if (speakingNow) { stopSpeaking(); }        // interrompre puis parler
+  if (!recog) { setState("🎤 Micro non disponible sur cet appareil"); return; }
+  try {
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    recog.start();
+    setState("🎤 Je t'écoute…", 'listening');
+  } catch (e) { /* déjà actif */ }
+});
+
+/* ================= divers ================= */
+soundToggle.addEventListener('click', () => {
+  soundOn = !soundOn;
+  soundToggle.textContent = soundOn ? '🔊 Voix : ON' : '🔇 Voix : OFF';
+  soundToggle.classList.toggle('off', !soundOn);
+  if (!soundOn) stopSpeaking();
+});
+
+document.querySelectorAll('.chip-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    input.value = btn.dataset.q;
+    form.dispatchEvent(new Event('submit'));
+  });
+});
+
+/* question transmise depuis un chapitre / exercice */
+const q0 = new URLSearchParams(location.search).get('question');
+if (q0) {
+  input.value = q0;
+  setTimeout(() => form.dispatchEvent(new Event('submit')), 400);
+}
+</script>
+{% endblock %}

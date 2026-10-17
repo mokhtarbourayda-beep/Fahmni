@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}{{ ch['titre'] }} — FAHMNI{% endblock %}
+{% block content %}
+<div class="container page">
+  <a class="back" href="{{ url_for('cours', niveau=ch['niveau']) }}#{{ ch['code'] }}">← Retour aux cours</a>
+
+  <div class="lesson-head" style="--mc: {{ ch['couleur'] }}">
+    <span class="lesson-ico">{{ ch['icone'] }}</span>
+    <div>
+      <div class="chips">
+        <span class="chip chip-niveau">{{ NIVEAU_LABEL[ch['niveau']] }}</span>
+        <span class="chip">{{ ch['sujet'] }}</span>
+      </div>
+      <h1>{{ ch['titre'] }}</h1>
+      <p class="muted">{{ ch['resume'] }}</p>
+    </div>
+  </div>
+
+  {% if lecon %}
+    {% if lecon.intro %}
+    <div class="lesson-intro panel">
+      <h3>🧭 L'essentiel</h3>
+      <p>{{ lecon.intro }}</p>
+    </div>
+    {% endif %}
+
+    <h2 class="section-title">Trois façons de comprendre</h2>
+    <div class="grid3">
+      {% for m in lecon.methodes %}
+      <div class="method-card">
+        <div class="method-num">{{ loop.index }}</div>
+        <h3>{{ m.nom }}</h3>
+        <p class="prewrap">{{ m.texte }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if lecon.exemples %}
+    <h2 class="section-title">Exemples corrigés pas à pas</h2>
+    {% for ex in lecon.exemples %}
+    <div class="example-card">
+      <div class="example-q">{{ ex.question }}</div>
+      <ol class="example-steps">
+        {% for e in ex.etapes %}<li>{{ e }}</li>{% endfor %}
+      </ol>
+      <div class="example-res">✅ {{ ex.reponse }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if lecon.pieges %}
+    <div class="panel panel-warn">
+      <h3>⚠️ Pièges à éviter</h3>
+      <ul>{% for p in lecon.pieges %}<li>{{ p }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+
+    {% if lecon.formules %}
+    <div class="panel panel-formulas">
+      <h3>🧮 Formules à connaître</h3>
+      <div class="formulas">
+        {% for f in lecon.formules %}<code>{{ f }}</code>{% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  {% else %}
+    <div class="panel"><p class="muted">Leçon en préparation. En attendant, entraîne-toi sur les exercices du chapitre ⬇️</p></div>
+  {% endif %}
+
+  <div class="lesson-cta">
+    <a class="btn btn-gold" href="{{ url_for('prof') }}?question={{ ch['titre']|urlencode }}">🤖 Demander au Prof Atlas</a>
+    <a class="btn btn-primary" href="{{ url_for('exercices') }}?chapitre={{ ch['id'] }}">📝 Faire les exercices</a>
+  </div>
+
+  {% if exercices %}
+  <h2 class="section-title">Exercices du chapitre</h2>
+  <div class="mini-list panel">
+    {% for e in exercices %}
+    <a class="ex-row" href="{{ url_for('exercice', eid=e['id']) }}">
+      <span class="dot" style="background: {{ DIFF_COLOR[e['difficulte']] }}"></span>
+      <span class="ex-apercu">{{ e['apercu'] }}…</span>
+      <span class="chip">{{ DIFF_LABEL[e['difficulte']] }} · {{ e['source'] }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

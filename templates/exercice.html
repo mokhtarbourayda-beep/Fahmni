@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Exercice #{{ ex['id'] }} — FAHMNI{% endblock %}
+{% block content %}
+<div class="container page page-narrow">
+  <a class="back" href="{{ url_for('exercices') }}">← Tous les exercices</a>
+
+  <div class="exercise-full" style="--mc: {{ ex['couleur'] }}">
+    <div class="exercise-top">
+      <span class="chip">{{ ex.icone }} {{ ex.chapitre }}</span>
+      <span class="chip chip-niveau">{{ NIVEAU_LABEL[ex['niveau']] }}</span>
+      <span class="dot-chip" style="--dc: {{ DIFF_COLOR[ex['difficulte']] }}">{{ DIFF_LABEL[ex['difficulte']] }}</span>
+      <span class="chip chip-source">{{ ex['source'] }}</span>
+    </div>
+
+    <h1 class="exercise-title">Exercice n°{{ ex['id'] }}</h1>
+    <div class="enonce prewrap">{{ ex['enonce'] }}</div>
+
+    {% if ex['astuce'] %}
+    <details class="hint">
+      <summary>💡 Voir un indice</summary>
+      <p>{{ ex['astuce'] }}</p>
+    </details>
+    {% endif %}
+
+    <details class="correction">
+      <summary>✅ Voir la correction détaillée</summary>
+      <div class="correction-body prewrap">{{ ex['solution'] }}</div>
+    </details>
+
+    {% if variantes %}
+    <details class="variante">
+      <summary>🔁 Autre version de cet exercice ({{ variantes|length }})</summary>
+      {% for v in variantes %}
+      <div class="variante-block">
+        <div class="enonce prewrap">{{ v.enonce }}</div>
+        <details class="correction"><summary>✅ Correction de cette version</summary>
+          <div class="correction-body prewrap">{{ v.solution }}</div>
+        </details>
+      </div>
+      {% endfor %}
+    </details>
+    {% endif %}
+
+    <div class="lesson-cta">
+      <a class="btn btn-gold" href="{{ url_for('prof') }}?question={{ ex['enonce'][:120]|urlencode }}">🤖 Bloqué ? Demande au Prof Atlas</a>
+      {% if suivants %}
+      <a class="btn btn-primary" href="{{ url_for('exercice', eid=suivants[0]['id']) }}">Exercice suivant →</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

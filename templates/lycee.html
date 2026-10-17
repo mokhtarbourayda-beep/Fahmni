@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ l['nom'] }} — FAHMNI{% endblock %}
+{% block content %}
+<div class="container page">
+  <a class="back" href="{{ url_for('annuaire') }}">← Annuaire</a>
+  <div class="page-head">
+    <div>
+      <h1>🏫 {{ l['nom'] }}</h1>
+      <p class="muted">{{ l['ville'] }} — {{ l['type'] }}</p>
+    </div>
+    <a class="btn btn-gold" href="{{ url_for('communaute') }}">Groupes du lycée ↓</a>
+  </div>
+
+  <h2 class="section-title">Classes ({{ classes|length }})</h2>
+  <div class="grid3">
+    {% for c in classes %}
+    <div class="class-card">
+      <div class="class-level {{ 'lv-tc' if c['niveau'] == 'TC' else 'lv-1bac' }}">
+        {{ NIVEAU_LABEL[c['niveau']] }}</div>
+      <h3>{{ c['nom'] }}</h3>
+      <p class="muted small">Filière {{ c['filiere'] }}</p>
+      <div class="class-foot">
+        <span class="chip">{{ c['n_eleves'] }} élève(s) inscrit(s)</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <h2 class="section-title">Groupes de ce lycée</h2>
+  {% if groupes %}
+  <div class="grid3">
+    {% for g in groupes %}
+    <a class="group-card" href="{{ url_for('groupe', gid=g['id']) }}">
+      <h3>💬 {{ g['nom'] }}</h3>
+      <p class="muted">{{ g['description'] or 'Groupe de travail' }}</p>
+      <span class="chip">{{ g['membres'] }} membres</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="muted">Aucun groupe pour ce lycée — <a href="{{ url_for('communaute') }}">sois le premier à en créer un !</a></p>
+  {% endif %}
+</div>
+{% endblock %}

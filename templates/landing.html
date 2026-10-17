@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-in">
+    <div class="hero-text">
+      <div class="badge">🇲🇦 Programme marocain — Tronc Commun & 1ère Bac</div>
+      <h1>Comprendre vraiment,<br>réussir durablement.</h1>
+      <p class="lead">Cours expliqués avec <strong>plusieurs méthodes</strong>, un Prof IA
+      disponible 24h/24, des exercices du <strong>basique au type examen</strong>, et une
+      communauté d'élèves de ton lycée.</p>
+      <div class="hero-cta">
+        {% if current_user() %}
+          <a class="btn btn-gold btn-lg" href="{{ url_for('dashboard') }}">Mon tableau de bord</a>
+          <a class="btn btn-ghost btn-lg" href="{{ url_for('prof') }}">Parler au Prof Atlas</a>
+        {% else %}
+          <a class="btn btn-gold btn-lg" href="{{ url_for('inscription') }}">Créer mon compte — Gratuit</a>
+          <a class="btn btn-ghost btn-lg" href="{{ url_for('connexion') }}">J'ai déjà un compte</a>
+        {% endif %}
+      </div>
+      <div class="hero-stats">
+        <div><b>{{ stats.chapitres }}</b><span>chapitres</span></div>
+        <div><b>{{ stats.exercices }}</b><span>exercices corrigés</span></div>
+        <div><b>{{ stats.lycees }}</b><span>lycées</span></div>
+        <div><b>{{ stats.eleves }}</b><span>élèves</span></div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="chat-demo">
+        <div class="msg user">Explique-moi les limites, je comprends rien 😅</div>
+        <div class="msg prof"><b>Prof Atlas</b><br>Méthode 1 — l'intuition graphique :
+        regarde vers quelle hauteur la courbe s'approche…<br>
+        Méthode 2 — le calcul : garde les termes dominants…<br>
+        ✏️ Exemple corrigé pas à pas ⬇️</div>
+        <div class="msg user">Ah oui !! Et pour la dérivée ?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features container" id="fonctions">
+  <h2 class="section-title">Tout ce qu'il faut pour réussir</h2>
+  <div class="grid4">
+    <div class="card">
+      <div class="card-ico">🤖</div>
+      <h3>Prof Atlas, ton tuteur IA</h3>
+      <p>Il explique chaque notion avec <b>2-3 méthodes différentes</b>, résout tes
+      équations pas à pas, et te donne un exercice pour vérifier.</p>
+    </div>
+    <div class="card">
+      <div class="card-ico">📝</div>
+      <h3>Exercices progressifs</h3>
+      <p>3 niveaux : <b>Basique</b> pour démarrer, <b>Moyen</b> pour consolider,
+      <b>Type Examen National/Régional</b> pour viser la note maximale. Corrections
+      détaillées + versions multiples.</p>
+    </div>
+    <div class="card">
+      <div class="card-ico">🏫</div>
+      <h3>Ton lycée, ta classe</h3>
+      <p>Annuaire des lycées du Maroc : inscrits dans ta classe, rejoins les groupes
+      de travail de ton établissement.</p>
+    </div>
+    <div class="card">
+      <div class="card-ico">💬</div>
+      <h3>Groupes d'élèves</h3>
+      <p>Crée tes propres groupes de révision, invite tes camarades avec un code,
+      entraidez-vous avant les contrôles.</p>
+    </div>
+  </div>
+</section>
+
+<section class="matieres container" id="matieres">
+  <h2 class="section-title">Nos matières</h2>
+  <div class="grid4">
+    {% for s in subjects %}
+    <div class="matiere-card" style="--mc: {{ s.couleur }}">
+      <span class="matiere-ico">{{ s.icone }}</span>
+      <h3>{{ s.nom }}</h3>
+      <p>Tronc Commun · 1ère Bac</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <h2>Prêt à transformer ta façon de réviser ?</h2>
+    <p>Inscription gratuite en 30 secondes — choisis ton lycée et ta classe.</p>
+    <a class="btn btn-gold btn-lg" href="{{ url_for('inscription') }}">Commencer maintenant</a>
+  </div>
+</section>
+{% endblock %}
