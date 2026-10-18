@@ -862,6 +862,7 @@ class LLMTutor:
         # les modèles gpt-oss raisonnent vite avec effort "low"
         body2 = dict(body)
         body2["reasoning_effort"] = "low"
+        body2["max_completion_tokens"] = 1500   # réponse rapide, jamais coupée
         last_err = None
         for essai in range(2):            # 1 réessai automatique si réseau/timeout
             for payload in (body2, body):  # retombe sans l'option si refusée

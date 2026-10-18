@@ -24,6 +24,17 @@ import db
 import tutor_engine
 
 app = Flask(__name__)
+
+
+@app.after_request
+def _frais_avoir_tout_le_temps(resp):
+    """Anti-cache : après chaque mise à jour du site, les élèves reçoivent
+    la NOUVELLE page (plus jamais une vieille page restée en mémoire)."""
+    if request.path.startswith("/static/"):
+        resp.headers["Cache-Control"] = "no-cache"
+    else:
+        resp.headers["Cache-Control"] = "no-store"
+    return resp
 SECRET_FILE = os.environ.get("FAHMNI_SECRET") or os.path.join(os.path.dirname(__file__), ".secret")
 
 
