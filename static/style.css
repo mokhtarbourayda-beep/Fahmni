@@ -739,32 +739,40 @@ label.check-defi:has(input:checked) {
                     to { transform: scale(1.25) rotate(10deg); opacity: 1; } }
 .prof-avatar.paused img { filter: saturate(.8); }
 
-/* ══════════ ATLAS STAGE : personnage vivant + écran numérique ══════════ */
+/* ══════════ ATLAS STAGE : photo anime choisie + écran numérique ══════════ */
 .atlas-stage { display: flex; gap: 16px; align-items: stretch; margin: 0 0 14px; }
-.atlas-puppet {
-  width: 188px; flex-shrink: 0; position: relative; align-self: flex-end;
-  filter: drop-shadow(0 10px 20px rgba(30, 64, 175, .28));
+.atlas-star {
+  width: 192px; flex-shrink: 0; align-self: center; position: relative;
+  animation: star-float 3.8s ease-in-out infinite;
 }
-.atlas-puppet svg { width: 100%; height: auto; display: block; overflow: visible; }
-#at-root { animation: puppet-sway 4.6s ease-in-out infinite; transform-origin: 110px 235px; }
-@keyframes puppet-sway { 0%,100% { transform: rotate(-1.3deg); } 50% { transform: rotate(1.3deg); } }
-#at-body { animation: puppet-breathe 3.4s ease-in-out infinite; transform-origin: 110px 235px; }
-@keyframes puppet-breathe { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(1.016); } }
-#at-head { transition: transform .45s ease; transform-origin: 110px 108px; }
-.atlas-puppet.talking #at-head { animation: head-bob 1.15s ease-in-out infinite; }
-@keyframes head-bob { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2.4deg); } }
-.atlas-puppet.think #at-head { transform: rotate(-7deg) translateY(2px); }
-#at-armR { transition: transform .55s cubic-bezier(.34,1.35,.4,1); transform-origin: 140px 142px; }
-.atlas-puppet.think #at-armR { transform: rotate(-78deg); }
-.atlas-puppet.win #at-armR { transform: rotate(-98deg); }
-.atlas-puppet.win #at-root { animation: puppet-jump .5s ease-in-out 3; }
-@keyframes puppet-jump { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-#at-eyeL, #at-eyeR { transform-box: fill-box; transform-origin: center; transition: transform .08s; }
-.atlas-puppet.blink #at-eyeL, .atlas-puppet.blink #at-eyeR { transform: scaleY(.1); }
+.atlas-star img {
+  width: 100%; display: block; border-radius: 20px;
+  border: 3px solid rgba(56, 189, 248, .55);
+  box-shadow: 0 0 30px rgba(56, 189, 248, .35), 0 12px 26px rgba(2, 8, 23, .5);
+  transition: transform .4s ease, border-color .4s ease, box-shadow .4s ease;
+}
+@keyframes star-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.star-rule {
+  position: absolute; right: -8px; bottom: -8px; font-size: 34px; z-index: 2;
+  transform: rotate(22deg); transform-origin: bottom left;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .45)); transition: transform .45s ease;
+}
+.atlas-star.talking .star-rule { animation: rule-swing .85s ease-in-out infinite alternate; }
+@keyframes rule-swing { from { transform: rotate(6deg); } to { transform: rotate(40deg); } }
+.atlas-star.talking img { animation: star-talk .55s ease-in-out infinite alternate; }
+@keyframes star-talk { from { transform: rotate(-1.6deg); } to { transform: rotate(1.8deg) scale(1.015); } }
+.atlas-star.think img { transform: rotate(-4deg) scale(.98); }
+.atlas-star.think .star-rule { transform: rotate(-55deg) translateY(-10px); }
+.atlas-star.win img {
+  animation: star-jump .5s ease-in-out 3; border-color: #fbbf24;
+  box-shadow: 0 0 46px rgba(251, 191, 36, .55), 0 12px 26px rgba(2, 8, 23, .5);
+}
+@keyframes star-jump { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px) rotate(2deg); } }
+.atlas-star.win .star-rule { transform: rotate(80deg); }
 
 /* ── l'écran numérique futuriste ── */
-.chalkboard.atlas-screen {
-  flex: 1; min-height: 160px; margin: 0; padding: 14px 18px 16px;
+.atlas-screen {
+  flex: 1; min-height: 170px; margin: 0; padding: 14px 18px 16px;
   background: linear-gradient(165deg, #0a1128 0%, #101d3d 55%, #0c2a4d 100%);
   border: 1px solid rgba(56, 189, 248, .45); border-radius: 16px;
   box-shadow: 0 0 36px rgba(56, 189, 248, .16), inset 0 0 70px rgba(37, 99, 235, .09);
@@ -804,6 +812,7 @@ label.check-defi:has(input:checked) {
   font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.5;
 }
 @media (max-width: 720px) {
-  .atlas-puppet { width: 96px; }
+  .atlas-star { width: 92px; }
+  .star-rule { font-size: 22px; right: -4px; bottom: -4px; }
   .atlas-stage { gap: 10px; }
 }

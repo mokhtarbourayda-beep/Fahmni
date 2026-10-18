@@ -830,8 +830,8 @@ class LLMTutor:
             try:
                 u = db.query("SELECT prenom, nom FROM users WHERE id = ?", (user_id,), one=True)
                 classe = db.query(
-                    "SELECT c.nom FROM classes c JOIN user_classes uc ON uc.class_id = c.id "
-                    "WHERE uc.user_id = ? LIMIT 1", (user_id,), one=True)
+                    "SELECT c.nom FROM classes c JOIN users u ON u.classe_id = c.id "
+                    "WHERE u.id = ? LIMIT 1", (user_id,), one=True)
                 hist = db.query(
                     "SELECT question FROM tutor_logs WHERE user_id = ? "
                     "ORDER BY id DESC LIMIT 3", (user_id,))
