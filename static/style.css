@@ -715,3 +715,26 @@ label.check-defi:has(input:checked) {
   box-shadow: none; animation: none; transform: none;
 }
 .act-btn.standby:hover { transform: none; border-color: #e3ecf4; }
+
+/* ══════════ PROF ATLAS — STAR D'ANIME ══════════ */
+.prof-avatar { overflow: visible; }
+.prof-avatar img {
+  width: 100%; height: 100%; object-fit: cover; object-position: top center;
+  border-radius: 50%; display: block;
+  background: linear-gradient(160deg, #e8f7ff, #d2ecff);
+}
+.prof-avatar::before {
+  content: ""; position: absolute; inset: -5px; border-radius: 50%; z-index: -1;
+  background: conic-gradient(from 0deg, #ffd54a, #2dd4bf, #3b82f6, #a78bfa, #ffd54a);
+  animation: spin-halo 6s linear infinite; filter: blur(1px); opacity: .9;
+}
+@keyframes spin-halo { to { transform: rotate(360deg); } }
+.prof-avatar { animation: float-anime 3.2s ease-in-out infinite; }
+@keyframes float-anime { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.prof-avatar.speaking::after {
+  content: "✨"; position: absolute; top: -8px; right: -6px; font-size: 1.2rem;
+  animation: twinkle 1s ease-in-out infinite alternate;
+}
+@keyframes twinkle { from { transform: scale(.8) rotate(-12deg); opacity: .6; }
+                    to { transform: scale(1.25) rotate(10deg); opacity: 1; } }
+.prof-avatar.paused img { filter: saturate(.8); }

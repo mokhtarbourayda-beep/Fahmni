@@ -6,7 +6,10 @@
   <!-- ═══════════ BARRE DE COMMANDE DU PROF (en haut) ═══════════ -->
   <header class="prof-topbar">
     <div class="prof-identity">
-      <div class="prof-avatar" id="profAvatar">👨‍🏫<span class="status-dot"></span></div>
+      <div class="prof-avatar" id="profAvatar">
+        <img src="/static/img/atlas_a.png" alt="Prof Atlas" id="profAvatarImg">
+        <span class="status-dot"></span>
+      </div>
       <div class="prof-id-text">
         <div class="prof-name">Prof Atlas
           {% if live %}<span class="live-badge">● EN DIRECT</span>
@@ -97,9 +100,21 @@ fetch('/api/public_url').then(r => r.json()).then(d => {
 }).catch(() => {});
 
 /* ================= état du prof ================= */
+const POSES = {speaking: '/static/img/atlas_board.png',
+               thinking: '/static/img/atlas_think.png',
+               listening: '/static/img/atlas_think.png',
+               paused: '/static/img/atlas_think.png'};
+const imgAtlas = () => document.getElementById('profAvatarImg');
 function setState(txt, cls) {
   profState.textContent = txt;
   profAvatar.className = 'prof-avatar' + (cls ? ' ' + cls : '');
+  const im = imgAtlas();
+  if (im) im.src = POSES[cls] || '/static/img/atlas_a.png';
+}
+function atlasVictoire() {
+  const im = imgAtlas();
+  if (im) im.src = '/static/img/atlas_win.png';
+  setTimeout(() => { const i2 = imgAtlas(); if (i2) i2.src = '/static/img/atlas_a.png'; }, 2600);
 }
 function setProgress(txt) {
   profProgress.textContent = txt || '';
@@ -365,8 +380,9 @@ async function teachAnswer(chunks, answerText) {
     speakingNow = false;
     stopBtn.classList.add('standby');
     chalkboard.hidden = true;
-    setState('Prêt à t\'aider — une question ?');
+    setState('Explication terminée ⭐ Prêt à continuer !');
     setProgress('');
+    atlasVictoire();
   }
 }
 
