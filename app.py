@@ -365,12 +365,18 @@ def api_prof():
     if not question:
         return jsonify({"error": "question vide"}), 400
     tutor, live = tutor_engine.get_tutor()
+    uid = current_user()["id"]
+    u_ok = db.query("SELECT id FROM users WHERE id = ?", (uid,), one=True)
+    uid_safe = uid if u_ok else None
     try:
-        answer = tutor.respond(question, db, user_id=current_user()["id"])
+        answer = tutor.respond(question, db, user_id=uid_safe)
     except Exception as e:
         answer = f"⚠️ Erreur du moteur ({e}). Réessaie ou reformule."
-    db.execute("INSERT INTO tutor_logs(user_id, question, answer) VALUES (?,?,?)",
-               (current_user()["id"], question, answer))
+    try:
+        db.execute("INSERT INTO tutor_logs(user_id, question, answer) VALUES (?,?,?)",
+                   (uid_safe, question, answer))
+    except Exception:
+        pass
     return jsonify({"answer": answer, "mode": "live" if live else "demo"})
 
 

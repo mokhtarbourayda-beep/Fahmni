@@ -514,7 +514,7 @@ form.addEventListener('submit', async (e) => {
   } catch (err) {
     clearTimeout(waitT);
     pending.classList.remove('typing');
-    pbody.textContent = '⚠️ Connexion interrompue. Réessaie.';
+    pbody.textContent = '⚠️ Ta session a sauté — appuie sur F5 (rafraîchir) puis reconnecte-toi.';
     screenLine('⚠️ Oups, la connexion a échoué — réessaie.', 'screen-q');
     setState("Prêt à t'aider");
   }
