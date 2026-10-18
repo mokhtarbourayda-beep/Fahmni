@@ -143,10 +143,41 @@ function setPose(cls) {
   if (a) a.src = src;
   if (s) s.src = src;
 }
+/* — animation de PAROLE réelle : frames alternées (bouche qui bouge) — */
+const TALK_FRAMES = ['/static/img/atlas_t1.jpg', '/static/img/atlas_t2.jpg', '/static/img/atlas_t3.jpg'];
+let talkTimer = null, talkIdx = 0;
+function stopTalking() { if (talkTimer) { clearInterval(talkTimer); talkTimer = null; } }
+function startTalking() {
+  stopTalking();
+  talkTimer = setInterval(function () {
+    talkIdx = (talkIdx + 1) % TALK_FRAMES.length;
+    const src = TALK_FRAMES[talkIdx];
+    const a = imgAtlas(), s = starImg();
+    if (a) a.src = src;
+    if (s) s.src = src;
+  }, 650);
+}
+/* — la leçon s'écrit SUR l'écran, ligne par ligne — */
+function screenClean(t) {
+  return (t || '').replace(/\*\*/g, '').replace(/`/g, '')
+    .replace(/^\|?[\s:|-]{4,}\|?$/gm, '')
+    .replace(/^[ \t]*[-*][ \t]+/gm, '• ');
+}
+function screenLine(txt, cls) {
+  if (!chalkText) return null;
+  const d = document.createElement('div');
+  d.className = 'screen-line' + (cls ? ' ' + cls : '');
+  d.textContent = txt;
+  chalkText.appendChild(d);
+  const sc = document.getElementById('chalkboard');
+  if (sc) sc.scrollTop = sc.scrollHeight;
+  return d;
+}
 function setState(txt, cls) {
   profState.textContent = txt;
   profAvatar.className = 'prof-avatar' + (cls ? ' ' + cls : '');
   puppetState(cls);
+  if (cls === 'speaking') startTalking(); else stopTalking();
   setPose(cls);
 }
 function atlasVictoire() {
@@ -225,7 +256,6 @@ function stopSpeaking() {
   if ('speechSynthesis' in window) speechSynthesis.cancel();
   if (window.__curAudio) { try { window.__curAudio.pause(); } catch (e) {} window.__curAudio = null; }
   document.querySelectorAll('.step.speaking').forEach(el => el.classList.remove('speaking'));
-  chalkboard.hidden = true;
   setState("Prêt à t'aider");
   setProgress('');
 }
@@ -388,6 +418,8 @@ async function teachAnswer(chunks, answerText) {
   continueBtn.classList.add('standby');
   let spoken = 0, i = 0;
   const total = chunks.length;
+  chalkText.innerHTML = '';
+  if (window.__lastQ) screenLine('❓ ' + window.__lastQ, 'screen-q');
 
   while (i < chunks.length && mySession === session) {
     const c = chunks[i];
@@ -395,7 +427,9 @@ async function teachAnswer(chunks, answerText) {
     atlasPointTo(c.el);
     c.el.scrollIntoView({behavior: 'smooth', block: 'nearest'});
     chalkboard.hidden = false;
-    chalkText.textContent = c.text;
+    document.querySelectorAll('.screen-line.now').forEach(function (x) { x.classList.remove('now'); });
+    const lineEl = screenLine(screenClean(c.text), 'now');
+    atlasPointTo(lineEl);
     setState('🔊 J\'explique… écoute bien', 'speaking');
     setProgress(`Étape ${i + 1} / ${total}`);
     await speak(c.text, mySession);
@@ -406,7 +440,7 @@ async function teachAnswer(chunks, answerText) {
     i++;
     if (spoken >= SPEAK_BUDGET && i < chunks.length) {
       // pause pédagogique : le prof s'arrête et laisse la parole à l'élève
-      chalkText.textContent = '⏸️ Pause — à toi !';
+      screenLine('⏸️ Pause — à toi ! Dis « continue » ou pose ta question.', 'screen-q');
       setState('⏸️ Une question ? Interromps-moi !', 'paused');
       setProgress(`Étape ${i} / ${total} — en pause`);
       await speak('Voilà le début de mon explication. Dis « continue » pour la suite, ' +
@@ -416,7 +450,6 @@ async function teachAnswer(chunks, answerText) {
       stopBtn.classList.add('standby');
       speakingNow = false;
       continueBtn.classList.remove('standby');
-      chalkboard.hidden = true;
       setState('En pause — dis « continue » ou pose ta question', 'paused');
       return;
     }
@@ -424,7 +457,7 @@ async function teachAnswer(chunks, answerText) {
   if (mySession === session) {
     speakingNow = false;
     stopBtn.classList.add('standby');
-    chalkboard.hidden = true;
+    screenLine('⭐ Leçon terminée — ces notes restent sur l\'écran, révise-les !', 'screen-q');
     setState('Explication terminée ⭐ Prêt à continuer !');
     setProgress('');
     atlasVictoire();
@@ -448,6 +481,10 @@ form.addEventListener('submit', async (e) => {
   const user = addMsg('user prewrap');
   user.textContent = q;
   input.value = '';
+  chalkboard.hidden = false;
+  chalkText.innerHTML = '';
+  screenLine('❓ ' + q, 'screen-q');
+  screenLine('✍️ Atlas réfléchit…');
   const pending = addMsg('prof typing');
   pending.innerHTML = '<b>Prof Atlas</b>';
   const pbody = document.createElement('div');
@@ -458,6 +495,7 @@ form.addEventListener('submit', async (e) => {
   const waitT = setTimeout(function () {
     if (profState.textContent.indexOf('Réfléchit') >= 0)
       setState('📚 Atlas feuillette son encyclopédie — les réponses riches prennent quelques secondes…', 'thinking');
+    screenLine('📚 Je feuillette mon encyclopédie — quelques secondes…');
   }, 12000);
   continueBtn.classList.add('standby');
   try {
@@ -469,6 +507,7 @@ form.addEventListener('submit', async (e) => {
     clearTimeout(waitT);
     pending.remove();
     const {chunks} = renderAnswer(data.answer || data.error);
+    window.__lastQ = q;
     lastChunks = chunks;                 // mémorisée pour « Continuer la lecture »
     box.scrollTop = box.scrollHeight;
     teachAnswer(chunks, data.answer);
@@ -476,6 +515,7 @@ form.addEventListener('submit', async (e) => {
     clearTimeout(waitT);
     pending.classList.remove('typing');
     pbody.textContent = '⚠️ Connexion interrompue. Réessaie.';
+    screenLine('⚠️ Oups, la connexion a échoué — réessaie.', 'screen-q');
     setState("Prêt à t'aider");
   }
 });
