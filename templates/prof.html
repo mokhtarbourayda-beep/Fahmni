@@ -7,7 +7,7 @@
   <header class="prof-topbar">
     <div class="prof-identity">
       <div class="prof-avatar" id="profAvatar">
-        <img src="/static/img/atlas_a.png" alt="Prof Atlas" id="profAvatarImg">
+        <img src="/static/img/atlas_a.jpg" alt="Prof Atlas" id="profAvatarImg">
         <span class="status-dot"></span>
       </div>
       <div class="prof-id-text">
@@ -100,21 +100,21 @@ fetch('/api/public_url').then(r => r.json()).then(d => {
 }).catch(() => {});
 
 /* ================= état du prof ================= */
-const POSES = {speaking: '/static/img/atlas_board.png',
-               thinking: '/static/img/atlas_think.png',
-               listening: '/static/img/atlas_think.png',
-               paused: '/static/img/atlas_think.png'};
+const POSES = {speaking: '/static/img/atlas_board.jpg',
+               thinking: '/static/img/atlas_think.jpg',
+               listening: '/static/img/atlas_think.jpg',
+               paused: '/static/img/atlas_think.jpg'};
 const imgAtlas = () => document.getElementById('profAvatarImg');
 function setState(txt, cls) {
   profState.textContent = txt;
   profAvatar.className = 'prof-avatar' + (cls ? ' ' + cls : '');
   const im = imgAtlas();
-  if (im) im.src = POSES[cls] || '/static/img/atlas_a.png';
+  if (im) im.src = POSES[cls] || '/static/img/atlas_a.jpg';
 }
 function atlasVictoire() {
   const im = imgAtlas();
-  if (im) im.src = '/static/img/atlas_win.png';
-  setTimeout(() => { const i2 = imgAtlas(); if (i2) i2.src = '/static/img/atlas_a.png'; }, 2600);
+  if (im) im.src = '/static/img/atlas_win.jpg';
+  setTimeout(() => { const i2 = imgAtlas(); if (i2) i2.src = '/static/img/atlas_a.jpg'; }, 2600);
 }
 function setProgress(txt) {
   profProgress.textContent = txt || '';
