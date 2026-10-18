@@ -27,9 +27,67 @@
   </div>
 
   <!-- ═══════════ AU TABLEAU ═══════════ -->
-  <div class="chalkboard" id="chalkboard" hidden>
-    <div class="chalk-label">📋 Au tableau</div>
-    <div class="chalk-text" id="chalkText"></div>
+  <div class="atlas-stage">
+    <div class="atlas-puppet" id="atlasPuppet" aria-hidden="true">
+      <svg viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g-hair" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#1e3a8a"/><stop offset=".55" stop-color="#2563eb"/>
+            <stop offset="1" stop-color="#14b8a6"/>
+          </linearGradient>
+          <linearGradient id="g-vest" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#164e63"/>
+          </linearGradient>
+          <linearGradient id="g-rod" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#b45309"/><stop offset="1" stop-color="#fbbf24"/>
+          </linearGradient>
+        </defs>
+        <g id="at-root">
+          <g id="at-body">
+            <path d="M82 140 Q66 170 72 204" stroke="#f8fafc" stroke-width="13" fill="none" stroke-linecap="round"/>
+            <circle cx="72" cy="208" r="7" fill="#ffd9b8" stroke="#e8b28a"/>
+            <path d="M84 128 L136 128 Q150 132 152 152 L157 235 L63 235 L68 152 Q70 132 84 128 Z"
+                  fill="url(#g-vest)" stroke="#0b4560" stroke-width="2"/>
+            <path d="M92 127 L110 160 L128 127 L122 124 L110 138 L98 124 Z" fill="#f8fafc" stroke="#cbd5e1"/>
+            <path d="M106 128 L114 128 L117 154 L110 163 L103 154 Z" fill="#0f766e" stroke="#134e4a"/>
+            <path d="M70 152 Q108 162 150 152" stroke="#fbbf24" stroke-width="2" fill="none" opacity=".8"/>
+            <path d="M110 160 L110 233" stroke="#0b4560" stroke-width="1.6" opacity=".55"/>
+            <path d="M127 146 l2.4 5 5.4.6 -4 3.7 1 5.4 -4.8-2.7 -4.8 2.7 1-5.4 -4-3.7 5.4-.6 Z" fill="#fbbf24"/>
+            <g id="at-head">
+              <rect x="103" y="104" width="14" height="20" rx="6" fill="#ffd9b8" stroke="#e8b28a"/>
+              <ellipse cx="110" cy="80" rx="30" ry="32" fill="#ffd9b8" stroke="#e8b28a" stroke-width="1.6"/>
+              <path d="M78 78 Q72 42 108 34 Q146 30 144 66 Q148 74 143 82 Q141 62 132 56 Q136 66 133 76 Q126 58 112 54 Q120 62 118 74 Q108 56 94 58 Q102 66 99 78 Q92 64 84 68 Q90 74 89 84 Q82 84 78 78 Z"
+                    fill="url(#g-hair)" stroke="#172554" stroke-width="1.5"/>
+              <path d="M60 196 q-7 8 0 15 M60 196 q7 -8 14 0" stroke="#f8fafc" stroke-width="4" fill="none" opacity=".9"/>
+              <path d="M88 76 q6 -5 13 -2" stroke="#0f2b66" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+              <path d="M119 74 q7 -3 13 2" stroke="#0f2b66" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+              <g id="at-eyeL">
+                <ellipse cx="99" cy="85" rx="4.6" ry="6.2" fill="#1d4ed8"/>
+                <circle cx="100.6" cy="82.6" r="1.7" fill="#fff"/>
+              </g>
+              <g id="at-eyeR">
+                <ellipse cx="121" cy="85" rx="4.6" ry="6.2" fill="#1d4ed8"/>
+                <circle cx="122.6" cy="82.6" r="1.7" fill="#fff"/>
+              </g>
+              <path d="M103 101 Q110 108 117 101" stroke="#b45309" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            </g>
+            <g id="at-armR">
+              <path d="M140 141 L167 163" stroke="#f8fafc" stroke-width="13" stroke-linecap="round"/>
+              <path d="M167 163 L179 189" stroke="#ffd9b8" stroke-width="11" stroke-linecap="round"/>
+              <path d="M163 160 L172 168" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="180" cy="192" r="7.4" fill="#ffd9b8" stroke="#e8b28a"/>
+              <line x1="174" y1="198" x2="212" y2="114" stroke="url(#g-rod)" stroke-width="5" stroke-linecap="round"/>
+              <path d="M214 98 l3.4 7.2 7.8 .9 -5.8 5.3 1.6 7.7 -7-3.9 -7 3.9 1.6-7.7 -5.8-5.3 7.8-.9 Z" fill="#fbbf24" stroke="#b45309"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="chalkboard atlas-screen" id="chalkboard" hidden>
+      <div class="screen-head"><span class="screen-dot"></span> Atlas Screen · Leçon en direct
+        <span class="screen-live">● LIVE</span></div>
+      <div class="chalk-text" id="chalkText"></div>
+    </div>
   </div>
 
   <!-- ═══════════ CARTE DE CHAT ═══════════ -->
@@ -100,6 +158,30 @@ fetch('/api/public_url').then(r => r.json()).then(d => {
 }).catch(() => {});
 
 /* ================= état du prof ================= */
+const puppetEl = document.getElementById('atlasPuppet');
+const armR = document.getElementById('at-armR');
+const BASE_ANG = -26;                    // angle du bras dans le dessin
+function atlasPointTo(el) {
+  if (!puppetEl || !armR || !el) return;
+  const pr = puppetEl.getBoundingClientRect(), er = el.getBoundingClientRect();
+  if (!pr.width || !er.width) return;
+  const sx = pr.left + pr.width * 0.62, sy = pr.top + pr.height * 0.44;
+  const dx = Math.max(140, er.left - sx), dy = (er.top + er.height / 2) - sy;
+  let ang = Math.atan2(dy, dx) * 180 / Math.PI - BASE_ANG;
+  ang = Math.max(-85, Math.min(60, ang));
+  armR.setAttribute('transform', 'rotate(' + ang.toFixed(1) + ' 140 142)');
+}
+if (puppetEl) setInterval(function () {
+  puppetEl.classList.add('blink');
+  setTimeout(function () { puppetEl.classList.remove('blink'); }, 150);
+}, 2800 + Math.random() * 2600);
+function puppetState(cls) {
+  if (!puppetEl) return;
+  puppetEl.classList.remove('talking', 'think', 'win');
+  if (cls === 'speaking') puppetEl.classList.add('talking');
+  else if (cls === 'thinking' || cls === 'listening' || cls === 'paused')
+    puppetEl.classList.add('think');
+}
 const POSES = {speaking: '/static/img/atlas_board.jpg',
                thinking: '/static/img/atlas_think.jpg',
                listening: '/static/img/atlas_think.jpg',
@@ -108,13 +190,18 @@ const imgAtlas = () => document.getElementById('profAvatarImg');
 function setState(txt, cls) {
   profState.textContent = txt;
   profAvatar.className = 'prof-avatar' + (cls ? ' ' + cls : '');
+  puppetState(cls);
   const im = imgAtlas();
   if (im) im.src = POSES[cls] || '/static/img/atlas_a.jpg';
 }
 function atlasVictoire() {
   const im = imgAtlas();
   if (im) im.src = '/static/img/atlas_win.jpg';
-  setTimeout(() => { const i2 = imgAtlas(); if (i2) i2.src = '/static/img/atlas_a.jpg'; }, 2600);
+  if (puppetEl) { puppetEl.classList.add('win'); }
+  setTimeout(() => {
+    const i2 = imgAtlas(); if (i2) i2.src = '/static/img/atlas_a.jpg';
+    if (puppetEl) puppetEl.classList.remove('win');
+  }, 2600);
 }
 function setProgress(txt) {
   profProgress.textContent = txt || '';
@@ -348,6 +435,7 @@ async function teachAnswer(chunks, answerText) {
   while (i < chunks.length && mySession === session) {
     const c = chunks[i];
     c.el.classList.add('speaking');
+    atlasPointTo(c.el);
     c.el.scrollIntoView({behavior: 'smooth', block: 'nearest'});
     chalkboard.hidden = false;
     chalkText.textContent = c.text;
@@ -410,6 +498,10 @@ form.addEventListener('submit', async (e) => {
   pbody.textContent = 'réfléchit…';
   pending.appendChild(pbody);
   setState('💭 Réfléchit…', 'thinking');
+  const waitT = setTimeout(function () {
+    if (profState.textContent.indexOf('Réfléchit') >= 0)
+      setState('📚 Atlas feuillette son encyclopédie — les réponses riches prennent quelques secondes…', 'thinking');
+  }, 12000);
   continueBtn.classList.add('standby');
   try {
     const res = await fetch('/api/prof', {
@@ -417,12 +509,14 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify({question: q})
     });
     const data = await res.json();
+    clearTimeout(waitT);
     pending.remove();
     const {chunks} = renderAnswer(data.answer || data.error);
     lastChunks = chunks;                 // mémorisée pour « Continuer la lecture »
     box.scrollTop = box.scrollHeight;
     teachAnswer(chunks, data.answer);
   } catch (err) {
+    clearTimeout(waitT);
     pending.classList.remove('typing');
     pbody.textContent = '⚠️ Connexion interrompue. Réessaie.';
     setState("Prêt à t'aider");

@@ -863,19 +863,23 @@ class LLMTutor:
         body2 = dict(body)
         body2["reasoning_effort"] = "low"
         last_err = None
-        for payload in (body2, body):     # retombe sans l'option si refusée
-            req = urllib.request.Request(f"{base}/chat/completions",
-                                         data=json.dumps(payload).encode(),
-                                         headers=headers)
-            try:
-                with urllib.request.urlopen(req, timeout=90) as r:
-                    data = json.loads(r.read())
-                return data["choices"][0]["message"]["content"]
-            except urllib.error.HTTPError as e:
-                if e.code in (400, 422) and payload is body2:
+        for essai in range(2):            # 1 réessai automatique si réseau/timeout
+            for payload in (body2, body):  # retombe sans l'option si refusée
+                req = urllib.request.Request(f"{base}/chat/completions",
+                                             data=json.dumps(payload).encode(),
+                                             headers=headers)
+                try:
+                    with urllib.request.urlopen(req, timeout=120) as r:
+                        data = json.loads(r.read())
+                    return data["choices"][0]["message"]["content"]
+                except urllib.error.HTTPError as e:
+                    if e.code in (400, 422) and payload is body2:
+                        last_err = e
+                        continue
+                    raise
+                except (urllib.error.URLError, TimeoutError, OSError) as e:
                     last_err = e
-                    continue
-                raise
+                    break                # problème réseau → nouvelle tentative
         raise last_err
 
 

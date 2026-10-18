@@ -738,3 +738,72 @@ label.check-defi:has(input:checked) {
 @keyframes twinkle { from { transform: scale(.8) rotate(-12deg); opacity: .6; }
                     to { transform: scale(1.25) rotate(10deg); opacity: 1; } }
 .prof-avatar.paused img { filter: saturate(.8); }
+
+/* ══════════ ATLAS STAGE : personnage vivant + écran numérique ══════════ */
+.atlas-stage { display: flex; gap: 16px; align-items: stretch; margin: 0 0 14px; }
+.atlas-puppet {
+  width: 188px; flex-shrink: 0; position: relative; align-self: flex-end;
+  filter: drop-shadow(0 10px 20px rgba(30, 64, 175, .28));
+}
+.atlas-puppet svg { width: 100%; height: auto; display: block; overflow: visible; }
+#at-root { animation: puppet-sway 4.6s ease-in-out infinite; transform-origin: 110px 235px; }
+@keyframes puppet-sway { 0%,100% { transform: rotate(-1.3deg); } 50% { transform: rotate(1.3deg); } }
+#at-body { animation: puppet-breathe 3.4s ease-in-out infinite; transform-origin: 110px 235px; }
+@keyframes puppet-breathe { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(1.016); } }
+#at-head { transition: transform .45s ease; transform-origin: 110px 108px; }
+.atlas-puppet.talking #at-head { animation: head-bob 1.15s ease-in-out infinite; }
+@keyframes head-bob { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2.4deg); } }
+.atlas-puppet.think #at-head { transform: rotate(-7deg) translateY(2px); }
+#at-armR { transition: transform .55s cubic-bezier(.34,1.35,.4,1); transform-origin: 140px 142px; }
+.atlas-puppet.think #at-armR { transform: rotate(-78deg); }
+.atlas-puppet.win #at-armR { transform: rotate(-98deg); }
+.atlas-puppet.win #at-root { animation: puppet-jump .5s ease-in-out 3; }
+@keyframes puppet-jump { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+#at-eyeL, #at-eyeR { transform-box: fill-box; transform-origin: center; transition: transform .08s; }
+.atlas-puppet.blink #at-eyeL, .atlas-puppet.blink #at-eyeR { transform: scaleY(.1); }
+
+/* ── l'écran numérique futuriste ── */
+.chalkboard.atlas-screen {
+  flex: 1; min-height: 160px; margin: 0; padding: 14px 18px 16px;
+  background: linear-gradient(165deg, #0a1128 0%, #101d3d 55%, #0c2a4d 100%);
+  border: 1px solid rgba(56, 189, 248, .45); border-radius: 16px;
+  box-shadow: 0 0 36px rgba(56, 189, 248, .16), inset 0 0 70px rgba(37, 99, 235, .09);
+  position: relative; overflow: hidden; animation: screen-on .4s ease;
+}
+@keyframes screen-on { from { opacity: 0; transform: scale(.985); } }
+.atlas-screen::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(56, 189, 248, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, .055) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.atlas-screen::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 45%; pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(125, 211, 252, .06), transparent);
+  animation: atlas-scan 5.5s linear infinite;
+}
+@keyframes atlas-scan { from { top: -45%; } to { top: 100%; } }
+.screen-head {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  color: #7dd3fc; font-size: .7rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+}
+.screen-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #22d3ee;
+  box-shadow: 0 0 10px #22d3ee; animation: pulse-dot 1.4s infinite;
+}
+@keyframes pulse-dot { 50% { opacity: .3; } }
+.screen-live {
+  margin-left: auto; background: rgba(34, 211, 238, .14);
+  border: 1px solid rgba(34, 211, 238, .45); color: #67e8f9;
+  padding: 2px 9px; border-radius: 999px; font-size: .6rem; letter-spacing: 1.6px;
+}
+.atlas-screen .chalk-text {
+  position: relative; z-index: 1; color: #e0f2fe; font-size: 1.06rem; font-weight: 600;
+  white-space: pre-wrap; text-shadow: 0 0 14px rgba(125, 211, 252, .35);
+  font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.5;
+}
+@media (max-width: 720px) {
+  .atlas-puppet { width: 96px; }
+  .atlas-stage { gap: 10px; }
+}
