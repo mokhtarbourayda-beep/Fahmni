@@ -8,5 +8,15 @@
   "lycee_id": 1,
   "classe_id": 1,
   "couleur": "#8572c9"
+ },
+ {
+  "id": 7,
+  "prenom": "Nadia",
+  "nom": "Fantome",
+  "email": "fantome@fahmni.ma",
+  "password_hash": "4ff44c3a81ba79da3273bc008951845b$c573d7a29182cb9af27e7e93c8baa419be64492880fd45a24323f2832b2b3d01",
+  "lycee_id": 1,
+  "classe_id": 1,
+  "couleur": "#22aa88"
  }
 ]
