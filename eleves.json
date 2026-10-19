@@ -18,5 +18,15 @@
   "lycee_id": 1,
   "classe_id": 1,
   "couleur": "#22aa88"
+ },
+ {
+  "id": 6,
+  "prenom": "Hamza",
+  "nom": "Prod",
+  "email": "prod1792408223@gmail.com",
+  "password_hash": "8f272c6fbcb596d40d8a7a16c9a2d2ca$bc85f3ad9411d30466047c17a81eb9bd22df953d74db49f4a0018d24fab5a7ca",
+  "lycee_id": 1,
+  "classe_id": 1,
+  "couleur": "#f57ae5"
  }
 ]
