@@ -1,0 +1,12 @@
+[
+ {
+  "id": 6,
+  "prenom": "Salma",
+  "nom": "Registre",
+  "email": "registre1792408118@test.ma",
+  "password_hash": "e6079b262562af37c93a44f193e3454c$ead94962817aba5b551a269954dbeffed5073348c8cf2e8b5dc3ab5d34784cdc",
+  "lycee_id": 1,
+  "classe_id": 1,
+  "couleur": "#8572c9"
+ }
+]
