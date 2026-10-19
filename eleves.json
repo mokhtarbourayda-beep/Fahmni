@@ -28,5 +28,15 @@
   "lycee_id": 1,
   "classe_id": 1,
   "couleur": "#f57ae5"
+ },
+ {
+  "id": 6,
+  "prenom": "Imane",
+  "nom": "Eleve",
+  "email": "eleve1792408278@gmail.com",
+  "password_hash": "421f6ba8e75f0de1e3efd14b450f0b9c$6c160fb52dc87102bdb1a4038c86311335b8cb031d3634c1d7c5eed86f1bcbd3",
+  "lycee_id": 1,
+  "classe_id": 1,
+  "couleur": "#05f4df"
  }
 ]
