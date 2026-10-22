@@ -10,12 +10,12 @@
    "maj": "2026-10-22T12:50:32"
   },
   "70": {
-   "niveau": 1,
-   "serie": 1,
-   "essais": 2,
-   "reussites": 1,
+   "niveau": 2,
+   "serie": 0,
+   "essais": 3,
+   "reussites": 2,
    "faiblesses": {},
-   "maj": "2026-10-22T12:50:52"
+   "maj": "2026-10-22T12:51:00"
   }
  }
 }
