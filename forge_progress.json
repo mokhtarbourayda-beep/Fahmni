@@ -11,13 +11,13 @@
   },
   "70": {
    "niveau": 2,
-   "serie": -1,
-   "essais": 4,
-   "reussites": 2,
+   "serie": 1,
+   "essais": 5,
+   "reussites": 3,
    "faiblesses": {
     "calcul de vitesse moyenne sur plusieurs tronçons": 1
    },
-   "maj": "2026-10-22T12:51:04"
+   "maj": "2026-10-22T12:54:12"
   },
   "68": {
    "niveau": 1,
