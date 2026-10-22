@@ -8,6 +8,16 @@
    "reussites": 0,
    "faiblesses": {},
    "maj": "2026-10-22T12:50:32"
+  },
+  "70": {
+   "niveau": 1,
+   "serie": -1,
+   "essais": 1,
+   "reussites": 0,
+   "faiblesses": {
+    "calcul de vitesse moyenne": 1
+   },
+   "maj": "2026-10-22T12:50:51"
   }
  }
 }
